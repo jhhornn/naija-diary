@@ -31,7 +31,6 @@ const UserSchema = new Schema({
     {
       type: ObjectId,
       ref: "Blog",
-      required: true
     }
   ]
 })
