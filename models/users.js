@@ -30,7 +30,7 @@ const UserSchema = new Schema({
   blogs: [
     {
       type: ObjectId,
-      ref: "Blog",
+      ref: "Blog"
     }
   ]
 })
