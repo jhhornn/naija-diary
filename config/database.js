@@ -7,47 +7,25 @@ const MONGODB_URI =
     ? process.env.TEST_MONGODB_URI
     : process.env.MONGODB_URI
 
-
-const connectDB = async (next) => {
-  try {
-    const conn = await mongoose.connect(MONGODB_URI, {
+const connectDB = async () => {
+  await mongoose
+    .connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
-    console.log(`MongoDB Conected: ${conn.connection.host}`)
-  } catch (err) {
-    next(err)
-    console.err(err)
-    process.exit(1)
-  }
+    .then((conn) => {
+      console.log(
+        `Conected to Mongo! Database name: ${conn.connections[0].name}`
+      )
+    })
+    .catch((err) => console.error("Error connecting to mongo", err))
+
 }
 
 
-//! hook functions for test database
-const dropDbBeforeEachTest = async (next) => {
-  try {
-    await mongoose.connect(MONGODB_URI)
-    await mongoose.connection.db.dropDatabase()
-  } catch (err) {
-    next(err)
-    console.error("Couldn't connect to MongoDB")
-  }
-}
-
-
-const dropDbAfterAllTestAndCloseConnection = async (next) => {
-  try {
-    await mongoose.connection.db.dropDatabase()
-    await mongoose.connection.close()
-  } catch (err) {
-    next(err)
-    console.error("Failed to drop database")
-  }
-}
 
 module.exports = {
   dropDbBeforeEachTest,
   dropDbAfterAllTestAndCloseConnection,
   connectDB
 }
-
