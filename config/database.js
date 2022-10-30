@@ -24,8 +24,4 @@ const connectDB = async () => {
 
 
 
-module.exports = {
-  dropDbBeforeEachTest,
-  dropDbAfterAllTestAndCloseConnection,
-  connectDB
-}
+module.exports = connectDB
