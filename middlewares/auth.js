@@ -53,4 +53,31 @@ module.exports = (passport) => {
       }
     )
   )
+
+  passport.use(
+    "login",
+    new localStrategy(
+      {
+        usernameField: "email",
+        passwordField: "password"
+      },
+      async (email, password, done) => {
+        try {
+          const user = await UserModel.findOne({ email })
+
+          const validate = await user.comparePassword(password)
+
+          if (!user || !validate) {
+            return done(null, false, {
+              message: "User not found or Password Incorrect"
+            })
+          }
+
+          return done(null, user, { message: "Logged in Successfully" })
+        } catch (err) {
+          done(err)
+        }
+      }
+    )
+  )
 }
