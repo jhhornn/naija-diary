@@ -19,9 +19,6 @@ const connectDB = async () => {
       )
     })
     .catch((err) => console.error("Error connecting to mongo", err))
-
 }
-
-
 
 module.exports = connectDB
