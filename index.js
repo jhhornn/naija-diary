@@ -1,5 +1,5 @@
 const app = require("./app")
-const { connectDB } = require("./config/database")
+const connectDB = require("./config/database")
 const http = require("http")
 const path = require("path")
 const dotenv = require("dotenv")
