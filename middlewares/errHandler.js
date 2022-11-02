@@ -14,8 +14,12 @@ const errorResponder = (err, req, res, next) => {
       message: "unauthorised access"
     })
   } else if (err.message.startsWith("E11000 duplicate key error collection")) {
-    res.status(401).json({
+    res.status(400).json({
       message: "email already in use"
+    })
+  } else if (err.message.startsWith("Blog validation failed")) {
+    res.status(400).json({
+      message: "input required field"
     })
   } else {
     next(err)
