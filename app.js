@@ -10,6 +10,7 @@ const {
 } = require("./middlewares/errHandler")
 
 const usersRoute = require("./routes/users")
+const blogRoute = require("./routes/blog")
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.use(passport.initialize())
 require("./middlewares/auth")(passport)
 
 app.use("/api", usersRoute)
+app.use("/api", blogRoute)
 
 app.use(errorLogger)
 app.use(errorResponder)
