@@ -5,5 +5,4 @@ const blogRouter = express.Router()
 
 blogRouter.route("/blog").post(createBlog)
 
-
 module.exports = blogRouter

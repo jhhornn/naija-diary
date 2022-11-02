@@ -16,10 +16,9 @@ beforeAll(async () => {
 beforeEach(async () => {
   await UserModel.deleteMany({})
 
-  const userObject = helper.initialUsers.map(user => new BlogModel(user))
-  const promiseArray = userObject.map(user => user.save())
+  const userObject = helper.initialUsers.map((user) => new BlogModel(user))
+  const promiseArray = userObject.map((user) => user.save())
   await Promise.all(promiseArray)
-
 })
 
 describe("Sign Up", () => {
@@ -45,7 +44,10 @@ describe("Sign Up", () => {
   })
 
   test("email must be unique", async () => {
-    const result = await api.post("/api/signup").send(helper.initialUsers[0]).expect(400)
+    const result = await api
+      .post("/api/signup")
+      .send(helper.initialUsers[0])
+      .expect(400)
 
     expect(result.body.message).toContain("email already in use")
     const usersAtTheEnd = await helper.usersInDb()

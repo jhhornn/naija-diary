@@ -30,7 +30,7 @@ const nonExistingId = async () => {
   return user._id.toString()
 }
 
-const existingUser =  async () => {
+const existingUser = async () => {
   const user = new UserModel({
     email: "tempUser@gmail.com",
     firstName: "Tobi",
@@ -52,7 +52,6 @@ const newUser = {
   password: "Password"
 }
 
-
 //! Instantiating users test parameters for blogs
 const initialBlogs = [
   {
@@ -69,20 +68,17 @@ const initialBlogs = [
   }
 ]
 
-
 const blogsInDb = async () => {
   const blogs = await BlogModel.find({})
   return blogs.map((blog) => blog.toJSON())
 }
 
-
-const newBlog =  {
+const newBlog = {
   title: "A new blog",
   description: "The gods are dead",
   tags: "#movies",
   body: "The gods are dead talks about a th belief of a certain community"
 }
-
 
 module.exports = {
   initialUsers,

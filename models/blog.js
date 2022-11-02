@@ -39,7 +39,6 @@ const BlogSchema = new Schema(
   { timestamps: true }
 )
 
-
 //! Add the blog reading time before saving
 BlogSchema.pre("save", function (next) {
   let blog = this
@@ -53,7 +52,6 @@ BlogSchema.pre("save", function (next) {
   blog.readingTime = totalTime == 0 ? 1 : totalTime
   next()
 })
-
 
 //! Delete certain fields before returning result to client
 BlogSchema.set("toJSON", {
