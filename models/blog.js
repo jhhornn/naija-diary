@@ -28,7 +28,7 @@ const BlogSchema = new Schema(
       type: Number
     },
     readingTime: {
-      type: Date
+      type: Number
     },
     tags: [String],
     body: {
@@ -39,7 +39,9 @@ const BlogSchema = new Schema(
   { timestamps: true }
 )
 
-BlogSchema.pre("save", function () {
+
+//! Add the blog reading time before saving
+BlogSchema.pre("save", function (next) {
   let blog = this
   let titleLength = blog.title.length
   let descriptionLength = blog.description.length
@@ -47,10 +49,21 @@ BlogSchema.pre("save", function () {
   let totalLength = titleLength + descriptionLength + bodyLength
   let totalTime = Math.round(totalLength / 200)
 
-  blog.readCount = bodyLength
+  // blog.readCount = bodyLength
   blog.readingTime = totalTime == 0 ? 1 : totalTime
+  next()
+})
+
+
+//! Delete certain fields before returning result to client
+BlogSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
 })
 
 const Blog = mongoose.model("Blog", BlogSchema)
 
-modules.exports = Blog
+module.exports = Blog
