@@ -36,7 +36,7 @@ const logIn = async (req, res, next) => {
           expiresIn: "1hr"
         })
 
-        return res.status(200).json({ token })
+        return res.status(200).json({ token: token })
       })
     } catch (err) {
       next(err)
