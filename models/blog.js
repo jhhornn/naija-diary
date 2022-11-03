@@ -48,7 +48,7 @@ BlogSchema.pre("save", function (next) {
   let totalLength = titleLength + descriptionLength + bodyLength
   let totalTime = Math.round(totalLength / 200)
 
-  // blog.readCount = bodyLength
+  blog.readCount = 0
   blog.readingTime = totalTime == 0 ? 1 : totalTime
   next()
 })
