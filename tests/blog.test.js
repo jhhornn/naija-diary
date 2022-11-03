@@ -9,6 +9,7 @@ jest.setTimeout(50000)
 
 const BlogModel = require("../models/blog")
 
+
 // let token
 
 beforeAll(async () => {
@@ -35,7 +36,7 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-describe("create blog route", () => {
+describe("Create blog route", () => {
   test("blog successfully created", async () => {
     await api
       .post("/api/blog")
@@ -57,6 +58,36 @@ describe("create blog route", () => {
     expect(result.body.message).toContain("input required field")
     const blogsAtTheEnd = await helper.blogsInDb()
     expect(blogsAtTheEnd).toHaveLength(helper.initialBlogs.length)
+  })
+})
+
+describe("Get blog route", () => {
+  test("all blogs are returned", async () => {
+    const result = await api
+    .get("/api/blog")
+    .expect(200)
+    .expect("Content-Type", /application\/json/)
+
+    const blogsAtTheEnd = await helper.blogsInDb()
+    expect(blogsAtTheEnd).toHaveLength(result.body.length)
+  })
+})
+
+describe("Update blog route", () => {
+  test("blogs are updated and returned", async () => {
+    const updates = {title: "update title", description:"update description", body:"update body", tags:["update", "new update"]}
+    await api
+    .put("/api/blog/")
+    .send(updates)
+    .expect(201)
+    .expect("Content-Type", /application\/json/)
+
+    const blogsAtTheEnd = await helper.blogsInDb()
+    const contents = blogsAtTheEnd.map((n) => n.title)
+    expect(contents).toContain("update title")
+    const tagContents = blogsAtTheEnd.map((n) => n.tags)
+    expect(tagContents[0].length).toEqual(3)
+
   })
 })
 
