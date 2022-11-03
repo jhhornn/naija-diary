@@ -19,6 +19,33 @@ const createBlog = async (req, res, next) => {
   }
 }
 
-const getAllBlog = async (req, res, next) => {}
+const getAllBlogs = async (req, res, next) => {
+    try { const allBlog = await BlogModel.find({})
 
-module.exports = createBlog
+    res.status(200).json(allBlog)
+    } catch (err) {
+        next(err)
+    }
+}
+
+const updateBlog = async (req, res, next) => {
+    try{
+        const { title, description, body, tags } = req.body
+
+        const updatedBlog = await BlogModel.findOneAndUpdate(title, {title, description, body, $push:{"tags":tags}}, {new:true})
+        res.status(201).json(updatedBlog)
+
+    } catch(err) {
+        next(err)
+    }
+}
+
+const updateBlogState = async (req, res, next) => {
+    try {
+        
+    } catch(err) {
+        next(err)
+    }
+}
+
+module.exports = {createBlog, getAllBlogs, updateBlog}
