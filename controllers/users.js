@@ -23,12 +23,12 @@ const logIn = async (req, res, next) => {
       }
 
       if (!user) {
-        const error = new Error("Username or password is incorrect")
-        return next(error)
+        const err = new Error("Username or password is incorrect")
+        return next(err)
       }
 
-      req.login(user, { session: false }, async (error) => {
-        if (error) return next(error)
+      req.login(user, { session: false }, async (err) => {
+        if (err) return next(err)
 
         const body = { id: user.id, email: user.email }
 
