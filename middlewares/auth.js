@@ -17,9 +17,10 @@ module.exports = (passport) => {
   passport.use(
     new JWTstrategy(opts, async (token, done) => {
       try {
-        return done(null, token.user)
-      } catch (error) {
-        done(error)
+        const user = token.user
+        return done(null, user)
+      } catch (err) {
+        done(err)
       }
     })
   )
