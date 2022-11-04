@@ -15,6 +15,9 @@ const BlogSchema = new Schema(
       type: String,
       required: true
     },
+    owner: {
+      type: String
+    },
     author: {
       type: objectId,
       ref: "User"
@@ -50,15 +53,18 @@ BlogSchema.pre("save", function (next) {
 
   blog.readCount = 0
   blog.readingTime = totalTime == 0 ? 1 : totalTime
+
+
   next()
 })
 
 //! Delete certain fields before returning result to client
 BlogSchema.set("toJSON", {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
+    // returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
+
   }
 })
 
