@@ -27,7 +27,7 @@ const createBlog = async (req, res, next) => {
     user.blogs = user.blogs.concat(savedBlog.id) 
     await user.save()
 
-    res.status(201).json(savedBlog)
+    return res.status(201).json(savedBlog)
   } catch (err) {
     next(err)
   }
@@ -54,7 +54,7 @@ const getAllBlogs = async (req, res, next) => {
         .skip(numOfBlogsToSkip)
         .limit(blogsPerPage)
 
-        res.status(200).json(blog)
+        return res.status(200).json(blog)
 
 
     } else if (tag || author || title) {
@@ -65,6 +65,7 @@ const getAllBlogs = async (req, res, next) => {
             .limit(blogsPerPage)
             return res.status(200).json(blog)
         }
+
         const blog = await BlogModel.find({$and: [{$or: [{owner: { $in: author}}, {title: { $in: title}}]}, {state: {$in: "published"}}]})
         .skip(numOfBlogsToSkip)
         .limit(blogsPerPage)
