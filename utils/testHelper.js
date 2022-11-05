@@ -57,14 +57,24 @@ const initialBlogs = [
   {
     title: "The gods must be crazy",
     description: "The gods must be crazy",
-    tags: "#movies",
-    body: "The gods must be crazy talks about a tribe that has not been open to civilisation"
+    tags: "movies",
+    body: "The gods must be crazy talks about a tribe that has not been open to civilisation",
+    state: "published"
   },
   {
     title: "The gods are  dead",
     description: "The gods are dead",
-    tags: "#movies",
+    owner: "John Doe",
+    tags: "horror",
     body: "The gods are dead talks about a th belief of a certain community"
+  },
+  {
+    title: "What a title",
+    description: "The gods are dead",
+    owner: "John Doe",  
+    tags: "horror",
+    body: "The gods are dead talks about a th belief of a certain community",
+    state: "published"
   }
 ]
 
