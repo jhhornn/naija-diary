@@ -71,7 +71,7 @@ const initialBlogs = [
   {
     title: "What a title",
     description: "The gods are dead",
-    owner: "John Doe",  
+    owner: "John Doe",
     tags: "horror",
     body: "The gods are dead talks about a th belief of a certain community",
     state: "published"

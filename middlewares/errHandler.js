@@ -5,7 +5,11 @@ const errorLogger = (err, req, res, next) => {
 
 const errorResponder = (err, req, res, next) => {
   res.header("Content-Type", "application/json")
-  if(err.message.startsWith("Cannot read properties of undefined (reading 'split')")){
+  if (
+    err.message.startsWith(
+      "Cannot read properties of undefined (reading 'split')"
+    )
+  ) {
     res.status(400).json({
       message: "tag query not found"
     })
