@@ -22,7 +22,7 @@
 ## Clone this repo
 
 ```sh
-git clone https://github.com/tobisupreme/naija-diary.git
+git clone https://github.com/jhhornn/naija-diary.git
 ```
 
 ## Install
