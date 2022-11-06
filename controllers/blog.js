@@ -5,7 +5,7 @@ const createBlog = async (req, res, next) => {
   const { id } = req.user
   const { title, description, body, tags } = req.body
 
-  const user = await UserModel.findOne({ id })
+  const user = await UserModel.findById({ _id:id })
 
   try {
     const blog = new BlogModel({
@@ -32,19 +32,17 @@ const getAllBlogs = async (req, res, next) => {
   const { tag, author, title, state, blogsPerPage, numOfBlogsToSkip } =
     req.filterObject
   const sorts = req.sort
+
   try {
-    const blog = await BlogModel.find(
+   if (tag|| author || title)
+   { const blog = await BlogModel.find(
       {
-        $and: [
-          {
-            $or: [
-              { tags: { $in: tag } },
-              { owner: { $in: author } },
-              { title: { $in: title } }
-            ]
-          },
-          { state: { $in: state } }
-        ]
+        state: { $in: state }, 
+          $or: [
+            { tags: { $in: tag } },
+            { owner: { $in: author } },
+            { title: { $in: title } }
+      ] 
       },
       { title: 1, description: 1, _id: 0 }
     )
@@ -53,6 +51,13 @@ const getAllBlogs = async (req, res, next) => {
       .limit(blogsPerPage)
 
     return res.status(200).json(blog)
+  }
+  const blog = await BlogModel.find({state: { $in: state }}, { title: 1, description: 1, _id: 0 })
+    .sort(sorts)
+    .skip(numOfBlogsToSkip)
+    .limit(blogsPerPage)
+
+  return res.status(200).json(blog)
   } catch (err) {
     next(err)
   }
@@ -76,13 +81,13 @@ const getAllUsersBlogs = async (req, res, next) => {
   const { id } = req.user
   const { tag, title, state, blogsPerPage, numOfBlogsToSkip } = req.filterObject
   const sorts = req.sort
-  const loggedInUser = await UserModel.findOne({ id })
+  const loggedInUser = await UserModel.findById({ _id:id })
 
   try {
-    const blog = loggedInUser.populate({
+    const blog = await loggedInUser.populate({
       path: "blogs",
       match: {
-        $and: [
+        $or: [
           {
             $or: [{ tags: { $in: tag } }, { title: { $in: title } }]
           },
@@ -96,7 +101,7 @@ const getAllUsersBlogs = async (req, res, next) => {
         sort: sorts
       }
     })
-    return res.status(200).json(blog)
+    return res.status(200).json(blog.blogs)
   } catch (err) {
     next(err)
   }
