@@ -55,11 +55,13 @@ const newUser = {
 //! Instantiating users test parameters for blogs
 const initialBlogs = [
   {
+    _id: "635f9d229a39346186b332cf",
     title: "The gods must be crazy",
     description: "The gods must be crazy",
     tags: "movies",
     body: "The gods must be crazy talks about a tribe that has not been open to civilisation",
     state: "published"
+    // author: "635f9d229a39346186b332cf"
   },
   {
     title: "The gods are  dead",
