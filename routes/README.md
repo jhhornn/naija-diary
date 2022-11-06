@@ -41,7 +41,7 @@
 
 ```json
 {
-    "username": 'jon_doe",
+    "username": "jon_doe",
     "password": "Password1"
 }
 ```
