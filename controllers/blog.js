@@ -105,27 +105,18 @@ const getAllUsersBlogs = async (req, res, next) => {
 const updateBlog = async (req, res, next) => {
   try {
     const authorId = req.user.id
-    const { id, blogTitle } = req.params
+    const { id } = req.params
     const blog = await BlogModel.findById(id)
-    const blogT = await BlogModel.findOne(blogTitle)
-    const blogId = blog.author.valueOf() || blogT.author.valueOf()
+    const blogId = blog.author.valueOf()
     const { title, description, body, tags } = req.body
 
     if (authorId === blogId) {
-      if (blog) {
         const updatedBlog = await BlogModel.findByIdAndUpdate(
           { _id: id },
           { title, description, body, $push: { tags: tags } },
           { new: true }
         )
         return res.status(201).json(updatedBlog)
-      }
-      const updatedBlog = await BlogModel.findOneAndUpdate(
-        { title: blogTitle },
-        { title, description, body, $push: { tags: tags } },
-        { new: true }
-      )
-      return res.status(201).json(updatedBlog)
     }
   } catch (err) {
     next(err)
