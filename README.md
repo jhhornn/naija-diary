@@ -108,7 +108,7 @@ npm run format
 ---
 
 ## Setup
-- Install [Node.js](https://nodejs.org/en/download/), [MongoDB]((https://www.mongodb.com/docs/manual/installation/))
+- Install [Node.js](https://nodejs.org/en/download/), [MongoDB](https://www.mongodb.com/docs/manual/installation/)
 - pull this repo
 - update env
 
