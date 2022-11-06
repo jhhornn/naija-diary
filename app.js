@@ -26,6 +26,10 @@ require("./middlewares/auth")(passport)
 app.use("/api", usersRoute)
 app.use("/api", blogRoute)
 
+app.all("*", (req, res, next) => {
+  next()
+})
+
 app.use(errorLogger)
 app.use(errorResponder)
 app.use(invalidPathHandler)
