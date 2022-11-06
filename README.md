@@ -9,6 +9,22 @@
 
 > A mini blog api that allows you post and follow hot gists going on in the country.
 
+## Built with
+<div align="center">
+
+![Javascript][javascript]
+![Node.js][node]
+![Express.js][express]
+![MongoDB][mongodb]
+
+</div>
+
+## Clone this repo
+
+```sh
+git clone https://github.com/tobisupreme/naija-diary.git
+```
+
 ## Install
 
 ```sh
@@ -26,6 +42,90 @@ npm run dev
 ```sh
 npm run test
 ```
+## Run prettier format
+
+```sh
+npm run format
+```
+---
+
+<!-- AltSchool Requirements -->
+
+## Requirements
+
+<details>
+
+<summary> <strong>Requirements for the examination project</strong> </summary>
+
+- [x] Users should have a first_name, last_name, email, password,
+
+- [x] A user should be able to sign up and sign in into the blog app
+
+- [x] Use JWT as authentication strategy and expire the token after 1 hour
+
+- [x] A blog can be in two states; draft and published
+
+- [x] Logged in and not logged in users should be able to get a list of published blogs created
+
+- [x] Logged in and not logged in users should be able to to get a published blog
+
+- [x] Logged in users should be able to create a blog.
+
+- [x] When a blog is created, it is in draft state
+
+- [x] The owner of the blog should be able to update the state of the blog to published
+
+- [x] The owner of a blog should be able to edit the blog in draft or published state
+
+- [x] The owner of the blog should be able to delete the blog in draft or published state
+
+- [x] The owner of the blog should be able to get a list of their blogs.
+
+- [x] The endpoint should be paginated
+
+- [x] It should be filterable by state
+
+- [x] Blogs created should have title, description, tags, author, timestamp, state, read_count, reading_time and body.
+
+- [x] The list of blogs endpoint that can be accessed by both logged in and not logged in users should be paginated:
+
+  - [x] default it to 20 blogs per page.
+
+  - [x] It should also be searchable by author, title and tags.
+
+  - [x] It should also be orderable by read_count, reading_time and timestamp
+
+- [x] When a single blog is requested, the api should return the user information (the author) with the blog. The read_count of the blog too should be updated by 1
+
+- [x] Come up with any algorithm for calculating the reading_time of the blog.
+
+- [x] Write tests for all endpoints
+
+
+
+</details>
+
+---
+
+## Setup
+- Install [Node.js](https://nodejs.org/en/download/), [MongoDB]((https://www.mongodb.com/docs/manual/installation/))
+- pull this repo
+- update env
+
+---
+## Base URL
+https://maroon-squirrel-shoe.cyclic.app/api/home/blog
+
+## This project was made possible by:
+
+- [AltSchool Africa School of Engineering](https://altschoolafrica.com/schools/engineering)
+- [Full Stack open 2022](https://fullstackopen.com/en/)
+- [Oluwatobi Balogun](https://github.com/tobisupreme/blogolicious)
+- [Kferanabg- readme-generator](https://github.com/kefranabg/readme-md-generator)
+- [Dr Austin Wopara's Ze Blog](https://github.com/Ze-Austin/ze-blog)
+- [Othneil Drew's README Template](https://github.com/othneildrew/Best-README-Template)
+- [Ileriayo's Markdown Badges](https://github.com/Ileriayo/markdown-badges)
+
 
 ## Author
 
@@ -34,6 +134,17 @@ npm run test
 * Twitter: [@jhhornn](https://twitter.com/jhhornn)
 * Github: [@jhhornn](https://github.com/jhhornn)
 * LinkedIn: [@Oluwaseun Awosise](https://linkedin.com/in/oluwaseun-awosise)
+* Project Link: [Naija-diary](https://github.com/tobisupreme/blogolicious)
+
+
+<!-- Markdown Links & Images -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/tobisupreme/blogolicious.svg?style=for-the-badge
+[contributors-url]: https://github.com/tobisupreme/blogolicious/graphs/contributors
+[javascript]: https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1C
+[node]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
+[express]: https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB
+[mongodb]: https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white
 
 
 

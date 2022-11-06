@@ -36,10 +36,10 @@ const filterAndSort = (req, res, next) => {
 
     if (state) {
       req.filterObject.state = state
-    }else {
+    } else {
       req.filterObject.state = ["draft", "published"]
     }
-    
+
     return next()
   } catch (err) {
     next(err)

@@ -4,36 +4,39 @@ const bcrypt = require("bcrypt")
 const Schema = mongoose.Schema
 const ObjectId = Schema.Types.ObjectId
 
-const UserSchema = new Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true
+const UserSchema = new Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    firstName: {
+      type: String,
+      required: true
+    },
+    lastName: {
+      type: String,
+      required: true
+    },
+    password: {
+      type: String,
+      required: true
+    },
+    userType: {
+      type: String,
+      default: "user",
+      enum: ["admin", "user"]
+    },
+    blogs: [
+      {
+        type: ObjectId,
+        ref: "Blog"
+      }
+    ]
   },
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  userType: {
-    type: String,
-    default: "user",
-    enum: ["admin", "user"]
-  },
-  blogs: [
-    {
-      type: ObjectId,
-      ref: "Blog"
-    }
-  ]
-}, { timestamps: true })
+  { timestamps: true }
+)
 
 //! Encrypt password before saving it to database
 UserSchema.pre("save", function (next) {

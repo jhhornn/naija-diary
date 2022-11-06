@@ -5,7 +5,7 @@ const createBlog = async (req, res, next) => {
   const { id } = req.user
   const { title, description, body, tags } = req.body
 
-  const user = await UserModel.findById({ _id:id })
+  const user = await UserModel.findById({ _id: id })
 
   try {
     const blog = new BlogModel({
@@ -34,16 +34,26 @@ const getAllBlogs = async (req, res, next) => {
   const sorts = req.sort
 
   try {
-   if (tag|| author || title)
-   { const blog = await BlogModel.find(
-      {
-        state: { $in: state }, 
+    if (tag || author || title) {
+      const blog = await BlogModel.find(
+        {
+          state: { $in: state },
           $or: [
             { tags: { $in: tag } },
             { owner: { $in: author } },
             { title: { $in: title } }
-      ] 
-      },
+          ]
+        },
+        { title: 1, description: 1 }
+      )
+        .sort(sorts)
+        .skip(numOfBlogsToSkip)
+        .limit(blogsPerPage)
+
+      return res.status(200).json(blog)
+    }
+    const blog = await BlogModel.find(
+      { state: { $in: state } },
       { title: 1, description: 1 }
     )
       .sort(sorts)
@@ -51,13 +61,6 @@ const getAllBlogs = async (req, res, next) => {
       .limit(blogsPerPage)
 
     return res.status(200).json(blog)
-  }
-  const blog = await BlogModel.find({state: { $in: state }}, { title: 1, description: 1 })
-    .sort(sorts)
-    .skip(numOfBlogsToSkip)
-    .limit(blogsPerPage)
-
-  return res.status(200).json(blog)
   } catch (err) {
     next(err)
   }
@@ -81,7 +84,7 @@ const getAllUsersBlogs = async (req, res, next) => {
   const { id } = req.user
   const { tag, title, state, blogsPerPage, numOfBlogsToSkip } = req.filterObject
   const sorts = req.sort
-  const loggedInUser = await UserModel.findById({ _id:id })
+  const loggedInUser = await UserModel.findById({ _id: id })
 
   try {
     const blog = await loggedInUser.populate({
@@ -116,12 +119,12 @@ const updateBlog = async (req, res, next) => {
     const { title, description, body, tags } = req.body
 
     if (authorId === blogId) {
-        await BlogModel.findByIdAndUpdate(
-          { _id: id },
-          { title, description, body, $push: { tags: tags } },
-          { new: true }
-        )
-        return res.status(201).json({ message: "Blog successfully updated"})
+      await BlogModel.findByIdAndUpdate(
+        { _id: id },
+        { title, description, body, $push: { tags: tags } },
+        { new: true }
+      )
+      return res.status(201).json({ message: "Blog successfully updated" })
     }
   } catch (err) {
     next(err)
@@ -141,7 +144,9 @@ const updateBlogState = async (req, res, next) => {
         { $set: { state: "published" } },
         { new: true }
       )
-      return res.status(200).json({ message: "Blog state successfully updated"})
+      return res
+        .status(200)
+        .json({ message: "Blog state successfully updated" })
     }
   } catch (err) {
     next(err)
