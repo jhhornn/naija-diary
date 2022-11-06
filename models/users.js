@@ -33,7 +33,7 @@ const UserSchema = new Schema({
       ref: "Blog"
     }
   ]
-})
+}, { timestamps: true })
 
 //! Encrypt password before saving it to database
 UserSchema.pre("save", function (next) {
