@@ -114,7 +114,7 @@ npm run format
 
 ---
 ## Base URL
-https://maroon-squirrel-shoe.cyclic.app/api/home/blog
+https://maroon-squirrel-shoe.cyclic.app
 
 ## This project was made possible by:
 
