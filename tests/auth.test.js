@@ -16,7 +16,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await UserModel.deleteMany({})
 
-  const userObject = helper.initialUsers.map((user) => new BlogModel(user))
+  const userObject = helper.initialUsers.map((user) => new UserModel(user))
   const promiseArray = userObject.map((user) => user.save())
   await Promise.all(promiseArray)
 })
