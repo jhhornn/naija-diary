@@ -9,6 +9,7 @@ jest.setTimeout(50000)
 
 const BlogModel = require("../models/blog")
 const UserModel = require("../models/users")
+const blogId = "635f9d229a39346186b332cf"
 
 let token
 const generateToken = async () => {
@@ -26,11 +27,6 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await BlogModel.deleteMany({})
-  // await UserModel.deleteMany({})
-
-  // const userObject = helper.initialUsers.map((user) => new BlogModel(user))
-  // const promiseUserArray = userObject.map((user) => user.save())
-  // await Promise.all(promiseUserArray)
 
   const blogObject = helper.initialBlogs.map((blog) => new BlogModel(blog))
   const promiseArray = blogObject.map((blog) => blog.save())
@@ -74,115 +70,240 @@ describe("POST/ request to api/blog", () => {
   })
 })
 
-describe("GET/ request to api/blog", () => {
-  test("all published blogs are returned", async () => {
+describe("GET/ request to api/home/blog", () => {
+  test("all published blogs are returned to unautheticated user", async () => {
     const result = await api
-      .get("/api/blog")
+      .get("/api/home/blog")
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
-    expect(result.body).toHaveLength(2)
-    expect(result.body[0].state).toBe("published")
+    //! Projection in blog controller
+    // result.body.map((n) => expect(n.state).toEqual("published"))
+  })
+
+  test("autheticated user can get all published blogs", async () => {
+    await generateToken()
+    const result = await api
+      .get("/api/home/blog")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    //! Projection in blog controller
+    // result.body.map((n) => expect(n.state).toEqual("published"))
+  })
+
+  test("unauthenticated user can get all published blogs by id", async () => {
+    const result = await api
+      .get(`/api/home/blog/${blogId}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  })
+
+  test("autheticated user can get all published blogs", async () => {
+    await generateToken()
+    const result = await api
+      .get("/api/home/blog/")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    //! Projection in blog controller
+    // result.body.map((n) => expect(n.state).toEqual("published"))
+  })
+
+  test("autheticated user can get a published blog by id", async () => {
+    await generateToken()
+    const result = await api
+      .get(`/api/home/blog/${blogId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.state).toEqual("published")
+    expect(result.body.readCount).toEqual(1)
+  })
+
+  test("unautheticated user can get a published blog by id", async () => {
+    const result = await api
+      .get(`/api/home/blog/${blogId}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    expect(result.body.state).toEqual("published")
+    expect(result.body.readCount).toEqual(1)
   })
 
   test("all blogs are returned queried by tag", async () => {
     const result = await api
-      .get("/api/blog")
+      .get("/api/home/blog")
       .query({ tag: "movies" })
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
-    result.body.map((n) =>
-      expect(n.tags).toEqual(expect.arrayContaining(["movies"]))
-    )
+
+    //! Projection in blog controller
+    // result.body.map((n) =>
+    //   expect(n.tags).toEqual(expect.arrayContaining(["movies"]))
+    // )
+  })
+
+  test("all blogs are returned queried by tag to authenticated user", async () => {
+    await generateToken()
+    const result = await api
+      .get("/api/home/blog")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ tag: "movies" })
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+
+    //! Projection in blog controller
+    // result.body.map((n) =>
+    //   expect(n.tags).toEqual(expect.arrayContaining(["movies"]))
+    // )
   })
 
   test("all blogs are returned queried by author", async () => {
     const result = await api
-      .get("/api/blog")
+      .get("/api/home/blog")
       .query({ author: "John Doe" })
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
-    result.body.map((n) => expect(n.owner).toEqual("John Doe"))
-    result.body.map((n) => expect(n.state).toEqual("published"))
+    //! Projection
+    // result.body.map((n) => expect(n.owner).toEqual("John Doe"))
+    // result.body.map((n) => expect(n.state).toEqual("published"))
     result.body.map((n) => expect(n.title).toEqual("What a title"))
   })
 
   test("all blogs are returned queried by title", async () => {
     const result = await api
-      .get("/api/blog")
+      .get("/api/home/blog")
       .query({ title: "The gods must be crazy" })
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
     result.body.map((n) => expect(n.title).toEqual("The gods must be crazy"))
-    result.body.map((n) => expect(n.state).toEqual("published"))
     expect(result.body.length).toEqual(1)
   })
 
   test("all blogs are returned and sorted", async () => {
     const helperQuery = await helper.blogsInDb()
     const result = await api
-      .get("/api/blog")
+      .get("/api/home/blog")
       .query({ sortBy: helperQuery.createdAt, orderBy: "desc" })
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
-    result.body.map((n) => expect(n.state).toBe("published"))
+
+    //! Projection in blog controller
+    // result.body.map((n) => expect(n.state).toBe("published"))
   })
 
-  test("no blog returned in page 2: pagination", async () => {
+  test("no blog returned on page 2: pagination", async () => {
     const result = await api
-      .get("/api/blog")
+      .get("/api/home/blog")
       .query({ p: 2 })
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
     expect(result.body.length).toEqual(0)
   })
-
-  // test("all blogs are returned", async () => {
-  //   const result = await api
-  //   .get("/api/blog")
-  //   .expect(200)
-  //   .expect("Content-Type", /application\/json/)
-
-  //   const blogsAtTheEnd = await helper.blogsInDb()
-  //   expect(blogsAtTheEnd).toHaveLength(result.body.length)
-  // })
 })
 
-describe("Update blog route", () => {
-  test("blogs are updated and returned", async () => {
+describe("GET/ request to users blog api/blog", () => {
+  test("all published blogs are returned for authenticated user", async () => {
+    await generateToken()
+    const result = await api
+      .get("/api/blog")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+  })
+
+  test("all blogs are returned queried by tag for authenticated user", async () => {
+    await generateToken()
+    await api
+      .get("/api/blog")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ tag: "movies" })
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  })
+
+  test("user has to be authenticated to get their individual blogs", async () => {
+    await api
+      .get("/api/blog")
+      .query({ author: "John Doe" })
+      .expect(401)
+  })
+
+  test("all blogs are returned queried by title for autheticated user", async () => {
+    await generateToken()
+    await api
+      .get("/api/blog")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ title: "The gods must be crazy" })
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  })
+
+  test("all blogs are returned and sorted", async () => {
+    await generateToken()
+    const helperQuery = await helper.blogsInDb()
+    const result = await api
+      .get("/api/blog")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ sortBy: helperQuery.createdAt, orderBy: "desc" })
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  })
+
+  test("no blog returned in page 2: pagination", async () => {
+    await generateToken()
+    const result = await api
+      .get("/api/blog")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ p: 2 })
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  })
+})
+
+describe("DELETE/ request to delete blog", () => {
+  test("blogs can only be deleted by author", async () => {
+    await generateToken()
+    await api
+      .delete(`/api/blog/${blogId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(401)
+  })
+})
+
+describe("PUT/ & PATCH/ request to update authenticated blog route by id", () => {
+  test("blogs can only be updated by author", async () => {
     const updates = {
       title: "update title",
       description: "update description",
       body: "update body",
       tags: ["update", "new update"]
     }
+    await generateToken()
     await api
-      .put("/api/blog/")
+      .put(`/api/blog/${blogId}`)
+      .set("Authorization", `Bearer ${token}`)
       .send(updates)
-      .expect(201)
-      .expect("Content-Type", /application\/json/)
-
-    const blogsAtTheEnd = await helper.blogsInDb()
-    const contents = blogsAtTheEnd.map((n) => n.title)
-    expect(contents).toContain("update title")
-    const tagContents = blogsAtTheEnd.map((n) => n.tags)
-    expect(tagContents[0].length).toEqual(3)
+      .expect(401)
   })
-
-  test("blog state is updated and returned", async () => {
+  test("blogstate can only be updated by author", async () => {
+    await generateToken()
     await api
-      .patch("/api/blog/")
-      .expect(201)
-      .expect("Content-Type", /application\/json/)
-
-    const blogsAtTheEnd = await helper.blogsInDb()
-    const contents = blogsAtTheEnd.map((n) => n.state)
-    expect(contents).toContain("published")
+      .put(`/api/blog/${blogId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ state: "published" })
+      .expect(401)
   })
 })
 
