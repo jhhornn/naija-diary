@@ -135,7 +135,7 @@ describe("GET/ request to api/home/blog", () => {
   })
 
   test("all blogs are returned queried by tag", async () => {
-    const result = await api
+    await api
       .get("/api/home/blog")
       .query({ tag: "movies" })
       .expect(200)
@@ -165,7 +165,7 @@ describe("GET/ request to api/home/blog", () => {
   test("all blogs are returned queried by author", async () => {
     const result = await api
       .get("/api/home/blog")
-      .query({ author: "John Doe" })
+      .query({ author: "John Dyke" })
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
@@ -188,7 +188,7 @@ describe("GET/ request to api/home/blog", () => {
 
   test("all blogs are returned and sorted", async () => {
     const helperQuery = await helper.blogsInDb()
-    const result = await api
+    await api
       .get("/api/home/blog")
       .query({ sortBy: helperQuery.createdAt, orderBy: "desc" })
       .expect(200)
@@ -244,9 +244,9 @@ describe("GET/ request to users blog api/blog", () => {
   })
 
   test("all blogs are returned and sorted", async () => {
-    await generateToken()
     const helperQuery = await helper.blogsInDb()
-    const result = await api
+    await generateToken()
+    await api
       .get("/api/blog")
       .set("Authorization", `Bearer ${token}`)
       .query({ sortBy: helperQuery.createdAt, orderBy: "desc" })
