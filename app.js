@@ -27,7 +27,7 @@ app.use("/api", blogRoute)
 app.get("/", (req, res, next) => {
   res.send(
     "<h1 style='color: black;text-align: center'>Welcome to <span style='color: green'>Naija Diary</span>!</h1>\
-     <br> <p style='color: black;text-align: center'>Click <a href='https://github.com/jhhornn/naija-diary'>here</a> to get started</p>"
+     <br> <h3 style='color: black;text-align: center'>Click <a href='https://github.com/jhhornn/naija-diary'>here</a> to get started</h3>"
   )
   next()
 })
