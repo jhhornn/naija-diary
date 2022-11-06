@@ -116,12 +116,12 @@ const updateBlog = async (req, res, next) => {
     const { title, description, body, tags } = req.body
 
     if (authorId === blogId) {
-        const updatedBlog = await BlogModel.findByIdAndUpdate(
+        await BlogModel.findByIdAndUpdate(
           { _id: id },
           { title, description, body, $push: { tags: tags } },
           { new: true }
         )
-        return res.status(201).json(updatedBlog)
+        return res.status(201).json({ message: "Blog successfully updated"})
     }
   } catch (err) {
     next(err)
@@ -136,12 +136,12 @@ const updateBlogState = async (req, res, next) => {
     const blogId = blog.author.valueOf()
 
     if (authorId === blogId) {
-      const updatedState = await BlogModel.findByIdAndUpdate(
+      await BlogModel.findByIdAndUpdate(
         { _id: id },
         { $set: { state: "published" } },
         { new: true }
       )
-      return res.status(201).json(updatedState)
+      return res.status(200).json({ message: "Blog state successfully updated"})
     }
   } catch (err) {
     next(err)
@@ -157,7 +157,7 @@ const deleteBlog = async (req, res, next) => {
 
     if (authorId === blogId) {
       await BlogModel.findByIdAndDelete({ _id: id })
-      return res.status(200).json({ message: "blog deleted" })
+      return res.status(200).json({ message: "Blog deleted" })
     }
   } catch (err) {
     next(err)
