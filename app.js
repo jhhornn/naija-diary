@@ -14,8 +14,6 @@ const blogRoute = require("./routes/blog")
 
 const app = express()
 
-// connectDB()
-
 app.use(express.json())
 app.use(urlencoded({ extended: false }))
 app.use(morgan("dev"))
@@ -25,6 +23,13 @@ require("./middlewares/auth")(passport)
 
 app.use("/api", usersRoute)
 app.use("/api", blogRoute)
+
+app.get("/", (req, res, next) => {
+  res.send(
+    "<h1 style='color: white;text-align: center'>Welcome to <span style='color: green'>Naija Diary</span>!</h1>"
+  )
+  next()
+})
 
 app.all("*", (req, res, next) => {
   next()
