@@ -116,6 +116,11 @@ npm run format
 ## Base URL
 https://maroon-squirrel-shoe.cyclic.app
 
+---
+## Readme Guides
+- [Model](./models/README.md)
+- [Route](./routes/README.md)
+
 ## This project was made possible by:
 
 - [AltSchool Africa School of Engineering](https://altschoolafrica.com/schools/engineering)
