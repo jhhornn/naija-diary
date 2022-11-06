@@ -134,7 +134,7 @@ https://maroon-squirrel-shoe.cyclic.app/api/home/blog
 * Twitter: [@jhhornn](https://twitter.com/jhhornn)
 * Github: [@jhhornn](https://github.com/jhhornn)
 * LinkedIn: [@Oluwaseun Awosise](https://linkedin.com/in/oluwaseun-awosise)
-* Project Link: [Naija-diary](https://github.com/tobisupreme/blogolicious)
+* Project Link: [Naija-diary](https://github.com/jhhornn/naija-diary)
 
 
 <!-- Markdown Links & Images -->
