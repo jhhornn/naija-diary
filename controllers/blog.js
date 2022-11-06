@@ -1,10 +1,6 @@
 const UserModel = require("../models/users")
 const BlogModel = require("../models/blog")
 
-const orderByFunc = (value) => {
-  return value === "desc" ? -1 : 1
-}
-
 const createBlog = async (req, res, next) => {
   const { id } = req.user
   const { title, description, body, tags } = req.body
@@ -33,197 +29,74 @@ const createBlog = async (req, res, next) => {
 }
 
 const getAllBlogs = async (req, res, next) => {
-  const { tag, author, title, p, sortBy, orderBy } = req.query
-  let page = p || 1
-  let blogsPerPage = 20
-  let numOfBlogsToSkip = (page - 1) * blogsPerPage
-
-  let sorts = {}
-  if (sortBy && orderBy) {
-    let order = orderByFunc(orderBy)
-    sorts[sortBy] = order
-  }
-
+  const { tag, author, title, state, blogsPerPage, numOfBlogsToSkip } =
+    req.filterObject
+  const sorts = req.sort
   try {
-    if ((tag || author || title) && sortBy && orderBy) {
-      const searchTag = Array.isArray(tag) ? tag : tag.split(", ")
-      const blog = await BlogModel.find({
+    const blog = await BlogModel.find(
+      {
         $and: [
           {
             $or: [
-              { tags: { $in: searchTag } },
+              { tags: { $in: tag } },
               { owner: { $in: author } },
               { title: { $in: title } }
             ]
           },
-          { state: { $in: "published" } }
+          { state: { $in: state } }
         ]
-      })
-        .sort(sorts)
-        .skip(numOfBlogsToSkip)
-        .limit(blogsPerPage)
+      },
+      { title: 1, description: 1, _id: 0 }
+    )
+      .sort(sorts)
+      .skip(numOfBlogsToSkip)
+      .limit(blogsPerPage)
 
-      return res.status(200).json(blog)
-    } else if (tag || author || title) {
-      if (tag) {
-        const searchTag = Array.isArray(tag)
-          ? tag
-          : tag.split(", ") || tag.split(" ")
-        const blog = await BlogModel.find({
-          $and: [
-            {
-              $or: [
-                { tags: { $in: searchTag } },
-                { owner: { $in: author } },
-                { title: { $in: title } }
-              ]
-            },
-            { state: { $in: "published" } }
-          ]
-        })
-          .skip(numOfBlogsToSkip)
-          .limit(blogsPerPage)
-        return res.status(200).json(blog)
-      }
-
-      const blog = await BlogModel.find({
-        $and: [
-          { $or: [{ owner: { $in: author } }, { title: { $in: title } }] },
-          { state: { $in: "published" } }
-        ]
-      })
-        .skip(numOfBlogsToSkip)
-        .limit(blogsPerPage)
-
-      return res.status(200).json(blog)
-    } else if (sortBy && orderBy) {
-      const allBlog = await BlogModel.find({ state: { $in: "published" } })
-        .sort(sorts)
-        .skip(numOfBlogsToSkip)
-        .limit(blogsPerPage)
-      return res.status(200).json(allBlog)
-    } else {
-      const allBlog = await BlogModel.find({ state: { $in: "published" } })
-        .skip(numOfBlogsToSkip)
-        .limit(blogsPerPage)
-      return res.status(200).json(allBlog)
-    }
+    return res.status(200).json(blog)
   } catch (err) {
     next(err)
   }
 }
+
+const getBlogById = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const blog = await BlogModel.findByIdAndUpdate(
+      { _id: id },
+      { $inc: { readCount: 1 } },
+      { new: true }
+    )
+    res.status(200).json(blog)
+  } catch (err) {
+    next(err)
+  }
+}
+
 const getAllUsersBlogs = async (req, res, next) => {
   const { id } = req.user
-
+  const { tag, title, state, blogsPerPage, numOfBlogsToSkip } = req.filterObject
+  const sorts = req.sort
   const loggedInUser = await UserModel.findOne({ id })
 
-  const { tag, author, title, p, sortBy, orderBy } = req.query
-  let page = p || 1
-  let blogsPerPage = 20
-  let numOfBlogsToSkip = (page - 1) * blogsPerPage
-
-  let sorts = {}
-  if (sortBy && orderBy) {
-    let order = orderByFunc(orderBy)
-    sorts[sortBy] = order
-  }
-
   try {
-    if ((tag || author || title) && sortBy && orderBy) {
-      const blog = loggedInUser.populate({
-        path: "blogs",
-        match: {
-          $and: [
-            {
-              $or: [
-                { tags: { $in: searchTag } },
-                { author: { $in: author } },
-                { title: { $in: title } }
-              ]
-            },
-            { state: { $in: "published" } }
-          ]
-        },
-        select: "title description -id",
-        options: {
-          skip: parseInt(numOfBlogsToSkip),
-          limit: parseInt(blogsPerPage),
-          sort: sorts
-        }
-      })
-
-      res.status(200).json(blog)
-    } else if (tag || author || title) {
-      if (tag) {
-        const searchTag = Array.isArray(tag) ? tag : tag.split(", ")
-        const blog = loggedInUser.populate({
-          path: "blogs",
-          match: {
-            $and: [
-              {
-                $or: [
-                  { tags: { $in: searchTag } },
-                  { author: { $in: author } },
-                  { title: { $in: title } }
-                ]
-              },
-              { state: { $in: "published" } }
-            ]
+    const blog = loggedInUser.populate({
+      path: "blogs",
+      match: {
+        $and: [
+          {
+            $or: [{ tags: { $in: tag } }, { title: { $in: title } }]
           },
-          select: "title description -id",
-          options: {
-            skip: parseInt(numOfBlogsToSkip),
-            limit: parseInt(blogsPerPage)
-          }
-        })
-        res.status(200).json(blog)
+          { state: { $in: state } }
+        ]
+      },
+      select: "title description",
+      options: {
+        skip: parseInt(numOfBlogsToSkip),
+        limit: parseInt(blogsPerPage),
+        sort: sorts
       }
-      const blog = loggedInUser.populate({
-        path: "blogs",
-        match: {
-          $and: [
-            {
-              $or: [
-                { tags: { $in: searchTag } },
-                { author: { $in: author } },
-                { title: { $in: title } }
-              ]
-            },
-            { state: { $in: "published" } }
-          ]
-        },
-        select: "title description -id",
-        options: {
-          skip: parseInt(numOfBlogsToSkip),
-          limit: parseInt(blogsPerPage)
-        }
-      })
-
-      res.status(200).json(blog)
-    } else if (sortBy && orderBy) {
-      const blog = loggedInUser.populate({
-        path: "blogs",
-        select: "title description -id",
-        options: {
-          skip: parseInt(numOfBlogsToSkip),
-          limit: parseInt(blogsPerPage),
-          sort: sorts
-        }
-      })
-
-      res.status(200).json(blog)
-    } else {
-      const blog = loggedInUser.populate({
-        path: "blogs",
-        select: "title description -id",
-        options: {
-          skip: parseInt(numOfBlogsToSkip),
-          limit: parseInt(blogsPerPage)
-        }
-      })
-
-      res.status(200).json(blog)
-    }
+    })
+    return res.status(200).json(blog)
   } catch (err) {
     next(err)
   }
@@ -231,14 +104,29 @@ const getAllUsersBlogs = async (req, res, next) => {
 
 const updateBlog = async (req, res, next) => {
   try {
+    const authorId = req.user.id
+    const { id, blogTitle } = req.params
+    const blog = await BlogModel.findById(id)
+    const blogT = await BlogModel.findOne(blogTitle)
+    const blogId = blog.author.valueOf() || blogT.author.valueOf()
     const { title, description, body, tags } = req.body
 
-    const updatedBlog = await BlogModel.findOneAndUpdate(
-      title,
-      { title, description, body, $push: { tags: tags } },
-      { new: true }
-    )
-    res.status(201).json(updatedBlog)
+    if (authorId === blogId) {
+      if (blog) {
+        const updatedBlog = await BlogModel.findByIdAndUpdate(
+          { _id: id },
+          { title, description, body, $push: { tags: tags } },
+          { new: true }
+        )
+        return res.status(201).json(updatedBlog)
+      }
+      const updatedBlog = await BlogModel.findOneAndUpdate(
+        { title: blogTitle },
+        { title, description, body, $push: { tags: tags } },
+        { new: true }
+      )
+      return res.status(201).json(updatedBlog)
+    }
   } catch (err) {
     next(err)
   }
@@ -246,17 +134,46 @@ const updateBlog = async (req, res, next) => {
 
 const updateBlogState = async (req, res, next) => {
   try {
-    const { title } = req.body
+    const authorId = req.user.id
+    const { id } = req.params
+    const blog = await BlogModel.findById(id)
+    const blogId = blog.author.valueOf()
 
-    const updatedState = await BlogModel.findOneAndUpdate(
-      title,
-      { $set: { state: "published" } },
-      { new: true }
-    )
-    res.status(201).json(updatedState)
+    if (authorId === blogId) {
+      const updatedState = await BlogModel.findByIdAndUpdate(
+        { _id: id },
+        { $set: { state: "published" } },
+        { new: true }
+      )
+      return res.status(201).json(updatedState)
+    }
   } catch (err) {
     next(err)
   }
 }
 
-module.exports = { createBlog, getAllBlogs, updateBlog, updateBlogState }
+const deleteBlog = async (req, res, next) => {
+  try {
+    const authorId = req.user.id
+    const { id } = req.params
+    const blog = await BlogModel.findById(id)
+    const blogId = blog.author.valueOf()
+
+    if (authorId === blogId) {
+      await BlogModel.findByIdAndDelete({ _id: id })
+      return res.status(200).json({ message: "blog deleted" })
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+module.exports = {
+  createBlog,
+  getAllBlogs,
+  updateBlog,
+  updateBlogState,
+  getAllUsersBlogs,
+  deleteBlog,
+  getBlogById
+}
