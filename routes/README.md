@@ -15,13 +15,13 @@
 }
 ```
 
-- **Responses:**
+- **Response:**
 
  201 Success
 ```json
 {
-    message: 'Signup successful',
-    user: {
+    "message": "Signup successful",
+    "user": {
         "email": "doe@example.com",
         "firstname": "jon",
         "lastname": "doe",
@@ -46,7 +46,7 @@
 }
 ```
 
-- **Responses**
+- **Response:**
 
 200 Success
 ```json
@@ -72,7 +72,7 @@
 }
 ```
 
-- **Responses**
+- **Response:**
 
 201 Success
 ```json
@@ -94,7 +94,7 @@
 
 - Route: `/api/home/blog/:id`
 - Method: `GET`
-- Responses
+- **Response:**
 
 200 Success
 ```json
@@ -121,7 +121,7 @@
     - tags - `/api/home/blog?tag=the blog tag`
     - sort (sortBy : orderBy, default: asc) - `/api/home/blog?sortBy=field in blog db&orderBy=asc or desc`
 
-- Responses
+- **Response:**
 
 
 
@@ -157,10 +157,10 @@
 - Method: `GET`
 - Header
     - Authorization: `Bearer {token}`
-- Responses
+- **Response:**
 
 200 Success
-```
+```json
 [
     {
     "_id": "6364a3f0d6f21227e234a921",
@@ -185,12 +185,12 @@
     - tags - `/api/blog?tag=the blog tag`
     - sort (sortBy : orderBy, default: asc) - `/api/blog?sortBy=field in blog db&orderBy=asc or desc`
 
-- Responses
+- **Response:**
 
 
 
 200 Success
-```
+```json
 [
     {
     "_id": "6364a3f0d6f21227e234a921",
@@ -232,7 +232,7 @@
     }
 ```
 
-- **Responses**
+- **Response:**
 
 
 
@@ -250,7 +250,7 @@
 - Header
     - Authorization: `Bearer {token}`
 
-- **Responses**
+- **Response:**
 
 
 
@@ -268,7 +268,7 @@
     - Authorization: `Bearer {token}`
 
 
-- **Responses**
+- **Response:**
 
 
 
