@@ -44,7 +44,7 @@ const getAllBlogs = async (req, res, next) => {
             { title: { $in: title } }
       ] 
       },
-      { title: 1, description: 1, _id: 0 }
+      { title: 1, description: 1 }
     )
       .sort(sorts)
       .skip(numOfBlogsToSkip)
@@ -52,7 +52,7 @@ const getAllBlogs = async (req, res, next) => {
 
     return res.status(200).json(blog)
   }
-  const blog = await BlogModel.find({state: { $in: state }}, { title: 1, description: 1, _id: 0 })
+  const blog = await BlogModel.find({state: { $in: state }}, { title: 1, description: 1 })
     .sort(sorts)
     .skip(numOfBlogsToSkip)
     .limit(blogsPerPage)
