@@ -141,7 +141,6 @@ describe("GET/ request to api/home/blog", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
-
     //! Projection in blog controller
     // result.body.map((n) =>
     //   expect(n.tags).toEqual(expect.arrayContaining(["movies"]))
@@ -156,7 +155,6 @@ describe("GET/ request to api/home/blog", () => {
       .query({ tag: "movies" })
       .expect(200)
       .expect("Content-Type", /application\/json/)
-
 
     //! Projection in blog controller
     // result.body.map((n) =>
@@ -196,7 +194,6 @@ describe("GET/ request to api/home/blog", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/)
 
-
     //! Projection in blog controller
     // result.body.map((n) => expect(n.state).toBe("published"))
   })
@@ -220,7 +217,6 @@ describe("GET/ request to users blog api/blog", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200)
       .expect("Content-Type", /application\/json/)
-
   })
 
   test("all blogs are returned queried by tag for authenticated user", async () => {
@@ -234,10 +230,7 @@ describe("GET/ request to users blog api/blog", () => {
   })
 
   test("user has to be authenticated to get their individual blogs", async () => {
-    await api
-      .get("/api/blog")
-      .query({ author: "John Doe" })
-      .expect(401)
+    await api.get("/api/blog").query({ author: "John Doe" }).expect(401)
   })
 
   test("all blogs are returned queried by title for autheticated user", async () => {
