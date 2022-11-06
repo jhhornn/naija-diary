@@ -1,5 +1,3 @@
-const { request } = require("../app")
-
 const orderByFunc = (value) => {
   return value === "desc" ? -1 : 1
 }
@@ -38,7 +36,10 @@ const filterAndSort = (req, res, next) => {
 
     if (state) {
       req.filterObject.state = state
+    }else {
+      req.filterObject.state = ["draft", "published"]
     }
+    
     return next()
   } catch (err) {
     next(err)
