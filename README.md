@@ -114,7 +114,7 @@ npm run format
 
 ---
 ## Base URL
-https://maroon-squirrel-shoe.cyclic.app
+https://naija-diary.cyclic.app
 
 ---
 ## Readme Guides
