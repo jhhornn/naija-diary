@@ -119,9 +119,17 @@ const updateBlog = async (req, res, next) => {
     const { title, description, body, tags } = req.body
 
     if (authorId === blogId) {
+      if (tags) {
+        await BlogModel.findByIdAndUpdate(
+          { _id: id },
+          { title, description, body, $push: { tags: tags } },
+          { new: true }
+        )
+        return res.status(201).json({ message: "Blog successfully updated" })
+      }
       await BlogModel.findByIdAndUpdate(
         { _id: id },
-        { title, description, body, $push: { tags: tags } },
+        { title, description, body },
         { new: true }
       )
       return res.status(201).json({ message: "Blog successfully updated" })
