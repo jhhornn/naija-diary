@@ -8,10 +8,10 @@
 - **Body:**
 ```json
 {
-  "email": "doe@example.com",
-  "password": "Password1",
-  "firstName": "jon",
-  "lastName": "doe",
+  "email": "tuyojr@oluwaseun.com",
+  "password": "agbaCoder",
+  "firstName": "tuyo",
+  "lastName": "jr"
 }
 ```
 
@@ -22,9 +22,9 @@
 {
     "message": "Signup successful",
     "user": {
-        "email": "doe@example.com",
-        "firstname": "jon",
-        "lastname": "doe",
+        "email": "tuyojr@oluwaseun.com",
+        "firstName": "tuyo",
+        "lastName": "jr"
         "userType": "user",
         "blogs": [],
         "createdAt": 2022-11-04T05:22:34.933+00:00,
@@ -41,8 +41,8 @@
 
 ```json
 {
-    "username": "jon_doe",
-    "password": "Password1"
+    "email": "tuyojr@oluwaseun.com",
+    "password": "agbaCoder",
 }
 ```
 
@@ -51,7 +51,7 @@
 200 Success
 ```json
 {
-    "token": "sjlkafjkldsfjsd"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjM2OGYwNDk5YzQ3ZDdiZTJiODQ4ZjU2IiwiZW1haWwiOiJ0dXlvanJAb2x1d2FzdWVuLmNvbSJ9LCJpYXQiOjE2Njc4MjE4MjUsImV4cCI6MTY2NzgyNTQyNX0.D7n0tEsCabqM6BkjkLP71cPiC2tyJ_pDc5oPIB8MXXw"
 }
 ```
 
@@ -65,10 +65,10 @@
 - **Body:**
 ```json
 {
-    "title": "A random blog",
-    "description": "The random blog description",
-    "tags": "horror",
-    "body": "The gods are dead talks about a th belief of a certain community"
+    "title": "Amazing Work2",
+    "description": "He's Called Sherlock For A Reason",
+    "tags": "Appreciation",
+    "body": "jhhornn did an amazing work putting together this project. Up only from here."
 }
 ```
 
@@ -77,20 +77,25 @@
 201 Success
 ```json
 {
-   "_id": "6364a3f0d6f21227e234a920",
-   "title": "A random blog",
-    "description": "The random blog description",
-    "owner": "jon doe",
-    "tags": "horror",
-    "author": ObjectId
-    "body": "The gods are dead talks about a th belief of a certain community",
-    "createdAt": 2022-11-04T05:22:34.933+00:00,
-    "updatedAt": 2022-11-04T05:22:34.933+00:00,
+    "_id": "6368f2589c47d7be2b848f5e",
+    "title": "Amazing Work",
+    "description": "He's Called Sherlock For A Reason",
+    "owner": "tuyo jr",
+    "author": "6368f0499c47d7be2b848f56",
+    "state": "draft",
+    "tags": [
+"Appreciation"
+],
+    "body": "jhhornn did an amazing work putting together this project. Up only from here.",
+    "createdAt": "2022-11-07T11:56:08.735Z",
+    "updatedAt": "2022-11-07T15:44:41.629Z",
+    "readCount": 0,
+    "readingTime": 1
 
 }
 ```
 
->### Get Blog by Id for both Authenticated and Unauthenticated Users
+>### Get Blog by blog Id for both Authenticated and Unauthenticated Users
 
 - Route: `/api/home/blog/:id`
 - Method: `GET`
@@ -100,15 +105,26 @@
 ```json
 [
     {
-        "_id": "6364a3f0d6f21227e234a921",
-        "title": "A random blog1",
-        "description": "The random blog description"
+    "_id": "6368f2589c47d7be2b848f5e",
+    "title": "Amazing Work",
+    "description": "He's Called Sherlock For A Reason",
+    "owner": "tuyo jr",
+    "author": "6368f0499c47d7be2b848f56",
+    "state": "published",
+    "tags": [
+"Appreciation"
+],
+    "body": "jhhornn did an amazing work putting together this project. Up only from here.",
+    "createdAt": "2022-11-07T11:56:08.735Z",
+    "updatedAt": "2022-11-07T15:44:41.629Z",
+    "readCount": 1,
+    "readingTime": 1
     }
 ]
 ```
 
 
->### Get all Orders for both Authenticated and Unauthenticated Users
+>### Get all Blogs for both Authenticated and Unauthenticated Users
 
 - Route: `/api/home/blog`
 - Method: `GET`
@@ -147,6 +163,11 @@
         "_id": "6364a3f0d6f21227e234a924",
         "title": "A random blog4",
         "description": "The random blog description"
+    },
+    {
+        "_id": "6368f2589c47d7be2b848f5e",
+        "title": "Amazing Work",
+        "description": "He's Called Sherlock For A Reason"
     }
 ]
 ```
@@ -163,15 +184,26 @@
 ```json
 [
     {
-    "_id": "6364a3f0d6f21227e234a921",
-   "title": "A random blog1",
-    "description": "The random blog description"
+    "_id": "6368f2589c47d7be2b848f5e",
+    "title": "Amazing Work",
+    "description": "He's Called Sherlock For A Reason",
+    "owner": "tuyo jr",
+    "author": "6368f0499c47d7be2b848f56",
+    "state": "draft",
+    "tags": [
+"Appreciation"
+],
+    "body": "jhhornn did an amazing work putting together this project. Up only from here.",
+    "createdAt": "2022-11-07T11:56:08.735Z",
+    "updatedAt": "2022-11-07T15:44:41.629Z",
+    "readCount": 1,
+    "readingTime": 1
     }
 ]
 ```
 
 
->### Get all Orders for Authenticated Users
+>### Get all Blogs for Authenticated Users
 
 - Route: `/api/home/blog`
 - Method: `GET`
