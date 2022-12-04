@@ -110,7 +110,7 @@ npm run format
 ## Setup
 - Install [Node.js](https://nodejs.org/en/download/), [MongoDB](https://www.mongodb.com/docs/manual/installation/)
 - pull this repo
-- update env
+- Create a .env file in the config folder and add and update all variabes present in the [exampleenv](./config/exampleenv) file.
 
 ---
 ## Base URL
