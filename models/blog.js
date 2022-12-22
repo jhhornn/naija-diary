@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-//const moment = require('moment')
 
 const Schema = mongoose.Schema
 const objectId = Schema.Types.ObjectId
@@ -53,6 +52,8 @@ BlogSchema.pre("save", function (next) {
 
   blog.readCount = 0
   blog.readingTime = totalTime == 0 ? 1 : totalTime
+
+  blog.tags = blog.tags.map(tag => tag.toLowerCase())
 
   next()
 })
