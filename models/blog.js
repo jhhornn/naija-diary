@@ -7,12 +7,12 @@ const BlogSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Please enter a title"],
       unique: true
     },
     description: {
       type: String,
-      required: true
+      required: [true, "Please enter a description"]
     },
     owner: {
       type: String
@@ -35,7 +35,7 @@ const BlogSchema = new Schema(
     tags: [String],
     body: {
       type: String,
-      required: true
+      required: [true, "Please provide the blog content"]
     }
   },
   { timestamps: true }
