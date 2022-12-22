@@ -1,6 +1,6 @@
-const orderByFunc = (value) => {
-  return value === "desc" ? -1 : 1
-}
+// const orderByFunc = (value) => {
+//   return value === "desc" ? -1 : 1
+// }
 
 const filterByPublished = (req, res, next) => {
   req.filterObject.state = "published"
@@ -8,36 +8,39 @@ const filterByPublished = (req, res, next) => {
 }
 
 const filterAndSort = (req, res, next) => {
-  const { tag, author, title, state, sortBy, orderBy } = req.query
+  const { tag, author, title, state, sort } = req.query
   req.filterObject = {}
-  req.sort = {}
-  if (sortBy && orderBy) {
-    let order = orderByFunc(orderBy)
-    req.sort[sortBy] = order
-  }
+  req.sortObject = {}
+  // if (sortBy && orderBy) {
+  //   let order = orderByFunc(orderBy)
+  //   req.sort[sortBy] = order
+  // }
 
   try {
     if (tag) {
       const searchTag = Array.isArray(tag)
-        ? tag
-        : tag.split(", ") || tag.split(" ")
-      req.filterObject.tag = searchTag
+        ? tag.toLowerCase()
+        : tag.split(", " || " " || ",").map((t) => t.toLowerCase())
+      req.filterObject.tags = { $in: searchTag }
     }
     if (author) {
-      req.filterObject.author = author
+      req.filterObject.owner = { $regex: author, $options: "i" }
     }
     if (title) {
-      req.filterObject.title = title
+      req.filterObject.title = { $regex: title, $options: "i" }
     }
 
-    if (sortBy && orderBy) {
-      req.sort
+    if (sort) {
+      const sortList = sort.split(",").join(" ")
+      req.sortObject.sort = sortList
+    } else {
+      req.sortObject.sort = "createdAt"
     }
 
     if (state) {
       req.filterObject.state = state
     } else {
-      req.filterObject.state = ["draft", "published"]
+      req.filterObject.state = { $in: ["draft", "published"] }
     }
 
     return next()
