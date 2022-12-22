@@ -53,7 +53,7 @@ BlogSchema.pre("save", function (next) {
   blog.readCount = 0
   blog.readingTime = totalTime == 0 ? 1 : totalTime
 
-  blog.tags = blog.tags.map(tag => tag.toLowerCase())
+  blog.tags = blog.tags.map((tag) => tag.toLowerCase())
 
   next()
 })
