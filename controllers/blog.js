@@ -29,38 +29,17 @@ const createBlog = async (req, res, next) => {
 }
 
 const getAllBlogs = async (req, res, next) => {
-  const { tag, author, title, state, blogsPerPage, numOfBlogsToSkip } =
-    req.filterObject
-  const sorts = req.sort
+  const filters = req.filterObject
+  const { sort } = req.sortObject
+  const { blogsPerPage, numOfBlogsToSkip } = req.paginate
 
   try {
-    if (tag || author || title) {
-      const blog = await BlogModel.find(
-        {
-          state: { $in: state },
-          $or: [
-            { tags: { $in: tag } },
-            { owner: { $in: author } },
-            { title: { $in: title } }
-          ]
-        },
-        { title: 1, description: 1 }
-      )
-        .sort(sorts)
-        .skip(numOfBlogsToSkip)
-        .limit(blogsPerPage)
-
-      return res.status(200).json(blog)
-    }
-    const blog = await BlogModel.find(
-      { state: { $in: state } },
-      { title: 1, description: 1 }
-    )
-      .sort(sorts)
+    const blog = await BlogModel.find(filters, { title: 1, description: 1 })
+      .sort(sort)
       .skip(numOfBlogsToSkip)
       .limit(blogsPerPage)
 
-    return res.status(200).json(blog)
+    return res.status(200).json({ count: blog.length, blogs: blog })
   } catch (err) {
     next(err)
   }
@@ -68,9 +47,10 @@ const getAllBlogs = async (req, res, next) => {
 
 const getBlogById = async (req, res, next) => {
   try {
+    const { state } = req.filterObject
     const { id } = req.params
-    const blog = await BlogModel.findByIdAndUpdate(
-      { _id: id },
+    const blog = await BlogModel.findOneAndUpdate(
+      { _id: id, state: state },
       { $inc: { readCount: 1 } },
       { new: true }
     )
@@ -80,28 +60,47 @@ const getBlogById = async (req, res, next) => {
   }
 }
 
+const getBlogByIdAuth = async (req, res, next) => {
+  try {
+    const { state } = req.filterObject
+    const userId = req.user.id
+    const { id } = req.params
+    const blogToGet = await BlogModel.findById(id)
+    const blogId = blogToGet.author.valueOf()
+    if (blogToGet.state === "draft" && userId !== blogId) {
+      return res.status(400).json({ message: "can't access other's draft" })
+    }
+    if (userId !== blogId) {
+      const blog = await BlogModel.findOneAndUpdate(
+        { _id: id, state: state },
+        { $inc: { readCount: 1 } },
+        { new: true }
+      )
+      return res.status(200).json(blog)
+    }
+    const blog = await BlogModel.findOne({ _id: id, state: state })
+    return res.status(200).json(blog)
+  } catch (err) {
+    next(err)
+  }
+}
+
 const getAllUsersBlogs = async (req, res, next) => {
   const { id } = req.user
-  const { tag, title, state, blogsPerPage, numOfBlogsToSkip } = req.filterObject
-  const sorts = req.sort
+  const { sort } = req.sortObject
+  const { blogsPerPage, numOfBlogsToSkip } = req.paginate
+  const filters = req.filterObject
   const loggedInUser = await UserModel.findById({ _id: id })
 
   try {
     const blog = await loggedInUser.populate({
       path: "blogs",
-      match: {
-        $or: [
-          {
-            $or: [{ tags: { $in: tag } }, { title: { $in: title } }]
-          },
-          { state: { $in: state } }
-        ]
-      },
+      match: filters,
       select: "title description",
       options: {
         skip: parseInt(numOfBlogsToSkip),
         limit: parseInt(blogsPerPage),
-        sort: sorts
+        sort: sort
       }
     })
     return res.status(200).json(blog.blogs)
@@ -184,5 +183,6 @@ module.exports = {
   updateBlogState,
   getAllUsersBlogs,
   deleteBlog,
-  getBlogById
+  getBlogById,
+  getBlogByIdAuth
 }
