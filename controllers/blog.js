@@ -39,7 +39,7 @@ const getAllBlogs = async (req, res, next) => {
       .skip(numOfBlogsToSkip)
       .limit(blogsPerPage)
 
-    return res.status(200).json(blog)
+    return res.status(200).json({ count: blog.length, blogs: blog })
   } catch (err) {
     next(err)
   }
