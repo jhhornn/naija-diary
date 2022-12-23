@@ -8,7 +8,8 @@ dotenv.config({ path: path.join(__dirname, "./config/.env") })
 const PORT = process.env.PORT || 4040
 const server = http.createServer(app)
 
-server.listen(PORT, async () => {
-  await connectDB()
-  console.log("Server running on port ", PORT)
+connectDB().then(() => {
+  server.listen(PORT, async () => {
+    console.log("Server running on port ", PORT)
+  })
 })
