@@ -69,9 +69,7 @@ paths:
           headers: {}
       deprecated: false
       security: []
-      servers:
-      - url: http://example.com/api
-        variables: {}
+    
   /signup:
     post:
       tags:
@@ -103,9 +101,6 @@ paths:
           headers: {}
       deprecated: false
       security: []
-      servers:
-      - url: https://naija-diary.cyclic.app/api
-        variables: {}
   /login:
     post:
       tags:
@@ -133,9 +128,6 @@ paths:
           headers: {}
       deprecated: false
       security: []
-      servers:
-      - url: http://example.com/api
-        variables: {}
   /blog:
     post:
       tags:
@@ -168,9 +160,6 @@ paths:
       deprecated: false
       security:
       - bearer: []
-      servers:
-      - url: http://example.com/api
-        variables: {}
     get:
       tags:
       - Authenticated Blog Endpoints
@@ -202,9 +191,6 @@ paths:
       deprecated: false
       security:
       - bearer: []
-      servers:
-      - url: http://example.com/api
-        variables: {}
   /blog/{id}:
     parameters:
       - in: path
@@ -227,9 +213,6 @@ paths:
       deprecated: false
       security:
       - bearer: []
-      servers:
-      - url: http://example.com/api
-        variables: {}
         
     put:
       tags:
@@ -260,9 +243,6 @@ paths:
       deprecated: false
       security:
       - bearer: []
-      servers:
-      - url: http://example.com/api
-        variables: {}
 
     delete:
       tags:
@@ -277,9 +257,6 @@ paths:
       deprecated: false
       security:
       - bearer: []
-      servers:
-      - url: http://example.com/api
-        variables: {}
 components:
   schemas:
     signupuserrequest:

@@ -1,5 +1,6 @@
 const express = require("express")
 const passport = require("passport")
+const cors = require("cors")
 const morgan = require("morgan")
 const { urlencoded } = require("body-parser")
 const {
@@ -18,6 +19,7 @@ const swaggerDocument = YAML.load("./naija-diary.yaml")
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 app.use(urlencoded({ extended: false }))
 app.use(morgan("dev"))
 
