@@ -1,0 +1,372 @@
+openapi: 3.0.0
+info:
+  title: naija-diary
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://naija-diary.cyclic.app/api
+  variables: {}
+- url: http://localhost:4040
+  variables: {}
+paths:
+  /home/blog:
+    get:
+      tags:
+      - Unauthenticated Blog Endpoints
+      summary: get all published blogs
+      operationId: getallpublishedblogs
+      parameters: 
+        - name: author
+          in: query
+          schema:
+            type: string
+          description: >
+             The `author` (the owner property in the blog schema) such as `john`, is passed as the value for the query
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: >
+             The `title` (the title property in the blog schema) or any word contained in  the title such as `amazing`, is passed as the value for the query
+        - name: tag
+          in: query
+          schema:
+            type: string
+          description: >
+             The `tag` (the tag property in the blog schema) such as `horror` or comma separated tags such as `horror, movies`, are passed as the values for the query
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: >
+             The `sort` query takes property values of the schema such as `createdAt` to sort in ascending order or `-createdAt` to sort in descending order
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+      servers:
+      - url: http://example.com/api
+        variables: {}
+  /home/blog/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The published blog ID.
+    get:
+      tags:
+      - Unauthenticated Blog Endpoints
+      summary: get blog by ID
+      operationId: getblogbyID
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+      servers:
+      - url: http://example.com/api
+        variables: {}
+  /signup:
+    post:
+      tags:
+      - Auth
+      summary: signup user
+      operationId: signupuser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/signupuserrequest'
+              - example:
+                  email: test@example.com
+                  password: test123
+                  firstName: Test
+                  lastName: Exam
+            example:
+              email: test@example.com
+              password: test123
+              firstName: Test
+              lastName: Exam
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+      servers:
+      - url: https://naija-diary.cyclic.app/api
+        variables: {}
+  /login:
+    post:
+      tags:
+      - Auth
+      summary: login user
+      operationId: loginuser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/loginuserrequest'
+              - example:
+                  email: test@example.com
+                  password: test123
+            example:
+              email: test@example.com
+              password: test123
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+      servers:
+      - url: http://example.com/api
+        variables: {}
+  /blog:
+    post:
+      tags:
+      - Authenticated Blog Endpoints
+      summary: logged in user create blog
+      operationId: loggedinusercreateblog
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/createblogrequest'
+              - example:
+                  title: This is yet another testing phase2
+                  description: This is yet another testing phase2 and trying to refactor my code
+                  tags: Testing
+                  body: jhhornn did an amazing work putting together this project. Up only from here.
+            example:
+              title: This is yet another testing phase2
+              description: This is yet another testing phase2 and trying to refactor my code
+              tags: Testing
+              body: jhhornn did an amazing work putting together this project. Up only from here.
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+      servers:
+      - url: http://example.com/api
+        variables: {}
+    get:
+      tags:
+      - Authenticated Blog Endpoints
+      summary: get all blogs created by user
+      operationId: getallblogscreatedbyuser
+      parameters:
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: >
+             The `title` (the title property in the blog schema) or any word contained in  the title such as `amazing`, is passed as the value for the query
+        - name: tag
+          in: query
+          schema:
+            type: string
+          description: >
+             The `tag` (the tag property in the blog schema) such as `horror` or comma separated tags such as `horror, movies`, are passed as the values for the query
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: >
+             The `sort` query takes property values of the schema such as `createdAt` to sort in ascending order or `-createdAt` to sort in descending order
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+      servers:
+      - url: http://example.com/api
+        variables: {}
+  /blog/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The published blog ID or draft ID if it's the owner of blog.
+        
+    patch:
+      tags:
+      - Authenticated Blog Endpoints
+      summary: update blog state
+      operationId: updateblogstate
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+      servers:
+      - url: http://example.com/api
+        variables: {}
+        
+    put:
+      tags:
+      - Authenticated Blog Endpoints
+      summary: update blog
+      operationId: updateblog
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/updateblogrequest'
+              - example:
+                  title: This is yet another testing phase editted
+                  description: This is yet another testing phase and trying to refactor my code
+                  body: jhhornn did an amazing work putting together this project. Up only from here.
+            example:
+              title: This is yet another testing phase editted
+              description: This is yet another testing phase and trying to refactor my code
+              body: jhhornn did an amazing work putting together this project. Up only from here.
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+      servers:
+      - url: http://example.com/api
+        variables: {}
+
+    delete:
+      tags:
+      - Authenticated Blog Endpoints
+      summary: delete blog
+      operationId: deleteblog
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+      servers:
+      - url: http://example.com/api
+        variables: {}
+components:
+  schemas:
+    signupuserrequest:
+      title: sign up user request
+      required:
+      - email
+      - password
+      - firstName
+      - lastName
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+      example:
+        email: test@example.com
+        password: test123
+        firstName: Test
+        lastName: Exam
+    loginuserrequest:
+      title: login user request
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: test@example.com
+        password: test123
+    createblogrequest:
+      title: create blog request
+      required:
+      - title
+      - description
+      - tags
+      - body
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        tags:
+          type: string
+        body:
+          type: string
+      example:
+        title: This is yet another testing phase2
+        description: This is yet another testing phase2 and trying to refactor my code
+        tags: Testing
+        body: jhhornn did an amazing work putting together this project. Up only from here.
+    updateblogrequest:
+      title: update blog request
+      required:
+      - title
+      - description
+      - body
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        body:
+          type: string
+      example:
+        title: This is yet another testing phase editted
+        description: This is yet another testing phase and trying to refactor my code
+        body: jhhornn did an amazing work putting together this project. Up only from here.
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+- name: Auth
+  description: ''
+- name: Authenticated Blog Endpoints
+  description: ''
+- name: Unauthenticated Blog Endpoints
+  description: ''
