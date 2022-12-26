@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken")
 const path = require("path")
 const dotenv = require("dotenv")
 dotenv.config({ path: path.join(__dirname, "../config/.env") })
+const { BadRequestError } = require("../errors")
 
 const signUp = async (req, res, next) => {
   try {
@@ -23,8 +24,7 @@ const logIn = async (req, res, next) => {
       }
 
       if (!user) {
-        const err = new Error("Username or password is incorrect")
-        return next(err)
+        throw new BadRequestError("Username or password is incorrect")
       }
 
       req.login(user, { session: false }, async (err) => {
