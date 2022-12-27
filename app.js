@@ -39,11 +39,9 @@ app.use(errorLogger)
 app.use(errorResponder)
 
 app.all("*", (req, res, next) => {
-  res
-    .status(404)
-    .send({
-      msg: `page not found because ${req.originalUrl} is not a valid path`
-    })
+  res.status(404).send({
+    msg: `page not found because ${req.originalUrl} is not a valid path`
+  })
 })
 
 module.exports = app
