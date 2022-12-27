@@ -22,7 +22,7 @@ const errorResponder = (err, req, res, next) => {
     customError.statusCode = 400
   }
   if (err.name == "CastError") {
-    customError.msg = `No item with id: ${err.value}`
+    customError.msg = `No blog with id: ${err.value}`
     customError.statusCode = 404
   }
 
