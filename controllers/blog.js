@@ -59,7 +59,12 @@ const getBlogById = async (req, res, next) => {
       { $inc: { readCount: 1 } },
       { new: true }
     )
-    res.status(200).json(blog)
+
+    if (!blog) {
+      throw new NotFoundError(`No blog with id ${id} to update`)
+    }
+
+    return res.status(200).json(blog)
   } catch (err) {
     next(err)
   }
@@ -81,9 +86,19 @@ const getBlogByIdAuth = async (req, res, next) => {
         { $inc: { readCount: 1 } },
         { new: true }
       )
+
+      if (!blog) {
+        throw new NotFoundError(`No blog with id ${id} to update`)
+      }
+
       return res.status(200).json(blog)
     }
     const blog = await BlogModel.findOne({ _id: id, state: state })
+
+    if (!blog) {
+      throw new NotFoundError(`No blog with id ${id} to update`)
+    }
+
     return res.status(200).json(blog)
   } catch (err) {
     next(err)
