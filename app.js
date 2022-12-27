@@ -3,11 +3,8 @@ const passport = require("passport")
 const cors = require("cors")
 const morgan = require("morgan")
 const { urlencoded } = require("body-parser")
-const {
-  errorLogger,
-  errorResponder,
-  invalidPathHandler
-} = require("./middlewares/errHandler")
+require("express-async-errors")
+const { errorLogger, errorResponder } = require("./middlewares/errHandler")
 
 const usersRoute = require("./routes/users")
 const blogRoute = require("./routes/blog")
@@ -38,12 +35,15 @@ app.get("/", (req, res, next) => {
 })
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
-app.all("*", (req, res, next) => {
-  next()
-})
-
 app.use(errorLogger)
 app.use(errorResponder)
-app.use(invalidPathHandler)
+
+app.all("*", (req, res, next) => {
+  res
+    .status(404)
+    .send({
+      msg: `page not found because ${req.originalUrl} is not a valid path`
+    })
+})
 
 module.exports = app
