@@ -65,7 +65,7 @@ module.exports = (passport) => {
       },
       async (email, password, done) => {
         try {
-          if(!email || !password) {
+          if (!email || !password) {
             throw new BadRequestError("Please provide email or password")
           }
           const user = await UserModel.findOne({ email })
@@ -78,7 +78,6 @@ module.exports = (passport) => {
 
           if (!validate) {
             throw new UnauthenticatedError("Please provide valid credentials")
-
           }
 
           return done(null, user, { message: "Logged in Successfully" })
