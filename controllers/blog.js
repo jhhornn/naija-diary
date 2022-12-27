@@ -1,5 +1,10 @@
 const UserModel = require("../models/users")
 const BlogModel = require("../models/blog")
+const {
+  BadRequestError,
+  NotFoundError,
+  UnathenticatedError
+} = require("../errors")
 
 const createBlog = async (req, res, next) => {
   const { id } = req.user
@@ -68,7 +73,7 @@ const getBlogByIdAuth = async (req, res, next) => {
     const blogToGet = await BlogModel.findById(id)
     const blogId = blogToGet.author.valueOf()
     if (blogToGet.state === "draft" && userId !== blogId) {
-      return res.status(400).json({ message: "can't access other's draft" })
+      throw new UnathenticatedError("can't access other's draft")
     }
     if (userId !== blogId) {
       const blog = await BlogModel.findOneAndUpdate(
@@ -117,22 +122,33 @@ const updateBlog = async (req, res, next) => {
     const blogId = blog.author.valueOf()
     const { title, description, body, tags } = req.body
 
-    if (authorId === blogId) {
-      if (tags) {
-        await BlogModel.findByIdAndUpdate(
-          { _id: id },
-          { title, description, body, $push: { tags: tags } },
-          { new: true }
-        )
-        return res.status(201).json({ message: "Blog successfully updated" })
-      }
+    if (authorId !== blogId) {
+      throw new UnathenticatedError("Unauthorised access")
+    }
+
+    if (title === "" || description === "" || body === "") {
+      throw new BadRequestError("Input all required fields")
+    }
+
+    if (tags) {
       await BlogModel.findByIdAndUpdate(
         { _id: id },
-        { title, description, body },
+        { title, description, body, $push: { tags: tags } },
         { new: true }
       )
       return res.status(201).json({ message: "Blog successfully updated" })
     }
+    const blogToUpdate = await BlogModel.findByIdAndUpdate(
+      { _id: id },
+      { title, description, body },
+      { new: true, runValidators: true }
+    )
+
+    if (!blogToUpdate) {
+      throw new NotFoundError(`No blog with id ${id} to update`)
+    }
+
+    return res.status(201).json({ message: "Blog successfully updated" })
   } catch (err) {
     next(err)
   }
@@ -145,16 +161,21 @@ const updateBlogState = async (req, res, next) => {
     const blog = await BlogModel.findById(id)
     const blogId = blog.author.valueOf()
 
-    if (authorId === blogId) {
-      await BlogModel.findByIdAndUpdate(
-        { _id: id },
-        { $set: { state: "published" } },
-        { new: true }
-      )
-      return res
-        .status(200)
-        .json({ message: "Blog state successfully updated" })
+    if (authorId !== blogId) {
+      throw new UnathenticatedError("Unauthorised access")
     }
+
+    const blogToUpdate = await BlogModel.findByIdAndUpdate(
+      { _id: id },
+      { $set: { state: "published" } },
+      { new: true, runValidators: true }
+    )
+
+    if (!blogToUpdate) {
+      throw new NotFoundError(`No blog with id ${id} to update it state`)
+    }
+
+    return res.status(200).json({ message: "Blog state successfully updated" })
   } catch (err) {
     next(err)
   }
@@ -167,10 +188,17 @@ const deleteBlog = async (req, res, next) => {
     const blog = await BlogModel.findById(id)
     const blogId = blog.author.valueOf()
 
-    if (authorId === blogId) {
-      await BlogModel.findByIdAndDelete({ _id: id })
-      return res.status(200).json({ message: "Blog deleted" })
+    if (authorId !== blogId) {
+      throw new UnathenticatedError("Unauthorised access")
     }
+
+    const blogToDelete = await BlogModel.findByIdAndDelete({ _id: id })
+
+    if (!blogToDelete) {
+      throw new NotFoundError(`No blog with id ${id} to delete`)
+    }
+
+    return res.status(200).json({ message: "Blog deleted" })
   } catch (err) {
     next(err)
   }
