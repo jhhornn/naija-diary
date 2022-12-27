@@ -9,6 +9,8 @@ const path = require("path")
 const dotenv = require("dotenv")
 dotenv.config({ path: path.join(__dirname, "../config/.env") })
 
+const { BadRequestError, UnauthenticatedError } = require("../errors")
+
 const opts = {}
 opts.secretOrKey = process.env.JWT_SECRET
 opts.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken()
@@ -35,14 +37,13 @@ module.exports = (passport) => {
       },
       async (req, email, password, done) => {
         try {
-          const { firstName, lastName, user_type } = req.body
+          const { firstName, lastName } = req.body
           const userObject = {
             firstName,
             lastName,
             email,
             password
           }
-          if (user_type) userObject.user_type = user_type
 
           const user = new UserModel(userObject)
           const savedUser = await user.save()
@@ -64,14 +65,19 @@ module.exports = (passport) => {
       },
       async (email, password, done) => {
         try {
+          if (!email || !password) {
+            throw new BadRequestError("Please provide email or password")
+          }
           const user = await UserModel.findOne({ email })
+
+          if (!user) {
+            throw new UnauthenticatedError("Please provide valid credentials")
+          }
 
           const validate = await user.comparePassword(password)
 
-          if (!user || !validate) {
-            return done(null, false, {
-              message: "User not found or Password Incorrect"
-            })
+          if (!validate) {
+            throw new UnauthenticatedError("Please provide valid credentials")
           }
 
           return done(null, user, { message: "Logged in Successfully" })

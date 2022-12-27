@@ -4,44 +4,32 @@ const errorLogger = (err, req, res, next) => {
 }
 
 const errorResponder = (err, req, res, next) => {
-  res.header("Content-Type", "application/json")
-  if (
-    err.message.startsWith(
-      "Cannot read properties of undefined (reading 'split')"
-    )
-  ) {
-    res.status(400).json({
-      message: "tag query not found"
-    })
-  } else if (err.name === "TypeError") {
-    res.status(401).json({
-      message: "unauthorised access"
-    })
-  } else if (err.name === "Error") {
-    res.status(401).json({
-      message: "unauthorised access"
-    })
-  } else if (err.message.startsWith("E11000 duplicate key error collection")) {
-    res.status(400).json({
-      message: "email already in use"
-    })
-  } else if (err.message.startsWith("Blog validation failed")) {
-    res.status(400).json({
-      message: "input required field"
-    })
-  } else {
-    next(err)
+  let customError = {
+    statusCode: err.statusCode || 500,
+    msg: err.message || "Something went wrong"
   }
-}
 
-const invalidPathHandler = (err, req, res, next) => {
-  res.status(500).send({
-    message: `${req.originalUrl} is not a valid path`
-  })
+  if (err.name == " ValidationError") {
+    customError.msg = Objects.values(err.errors)
+      .map((item) => item.message)
+      .join(",")
+    customError.statusCode = 400
+  }
+  if (err.code && err.code === 11000) {
+    customError.msg = `Duplicate value for ${Object.keys(
+      err.keyValue
+    )} field, please choose another value`
+    customError.statusCode = 400
+  }
+  if (err.name == "CastError") {
+    customError.msg = `No blog with id: ${err.value}`
+    customError.statusCode = 404
+  }
+
+  return res.status(customError.statusCode).json({ msg: customError.msg })
 }
 
 module.exports = {
   errorLogger,
-  errorResponder,
-  invalidPathHandler
+  errorResponder
 }
