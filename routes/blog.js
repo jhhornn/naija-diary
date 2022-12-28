@@ -12,6 +12,7 @@ const {
 } = require("../controllers/blog")
 const { filterAndSort, filterByPublished } = require("../middlewares/filter")
 const paginate = require("../middlewares/paginate")
+const validateBlog = require("../validators/blog.validator")
 
 const blogRouter = express.Router()
 
@@ -27,12 +28,12 @@ blogRouter.use("/blog", passport.authenticate("jwt", { session: false }))
 blogRouter
   .route("/blog")
   .get(filterAndSort, paginate, getAllUsersBlogs)
-  .post(createBlog)
+  .post(validateBlog, createBlog)
 
 blogRouter
   .route("/blog/:id")
   .get(filterAndSort, getBlogByIdAuth)
-  .put(updateBlog)
+  .put(validateBlog, updateBlog)
   .patch(updateBlogState)
   .delete(deleteBlog)
 
