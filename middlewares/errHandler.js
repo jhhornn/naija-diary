@@ -9,10 +9,12 @@ const errorResponder = (err, req, res, next) => {
     msg: err.message || "Something went wrong"
   }
 
-  if (err.name == " ValidationError") {
-    customError.msg = Objects.values(err.errors)
-      .map((item) => item.message)
-      .join(",")
+  if (err.name == "ValidationError") {
+    customError.msg = err.errors
+      ? Object.values(err.errors)
+          .map((item) => item.message)
+          .join(",")
+      : err.details.map((er) => er.message).join(",")
     customError.statusCode = 400
   }
   if (err.code && err.code === 11000) {

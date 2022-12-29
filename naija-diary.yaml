@@ -87,11 +87,13 @@ paths:
               - example:
                   email: test@example.com
                   password: test123
+                  repeatPassword: test123
                   firstName: Test
                   lastName: Exam
             example:
               email: test@example.com
               password: test123
+              repeatPassword: test123
               firstName: Test
               lastName: Exam
         required: true
@@ -145,7 +147,7 @@ paths:
               - example:
                   title: This is yet another testing phase2
                   description: This is yet another testing phase2 and trying to refactor my code
-                  tags: Testing
+                  tags: [Testing]
                   body: jhhornn did an amazing work putting together this project. Up only from here.
             example:
               title: This is yet another testing phase2
@@ -264,6 +266,7 @@ components:
       required:
       - email
       - password
+      - repeatPassword
       - firstName
       - lastName
       type: object
@@ -272,6 +275,12 @@ components:
           type: string
         password:
           type: string
+          pattern: "^[a-zA-Z0-9]{3,30}$"
+          description: value must be an alphanumeric string
+        repeatPassword:
+          type: string
+          pattern: "^[a-zA-Z0-9]{3,30}$"
+          description: value must match password
         firstName:
           type: string
         lastName:
@@ -279,6 +288,7 @@ components:
       example:
         email: test@example.com
         password: test123
+        repeatPassword: test123
         firstName: Test
         lastName: Exam
     loginuserrequest:
@@ -306,16 +316,22 @@ components:
       properties:
         title:
           type: string
+          minLength: 5
+          maxLength: 150
         description:
           type: string
+          minLength: 5
+          maxLength: 255
         tags:
-          type: string
+          type: array
+          items:
+            type: string
         body:
           type: string
       example:
         title: This is yet another testing phase2
         description: This is yet another testing phase2 and trying to refactor my code
-        tags: Testing
+        tags: [Testing]
         body: jhhornn did an amazing work putting together this project. Up only from here.
     updateblogrequest:
       title: update blog request

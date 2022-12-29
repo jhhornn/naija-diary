@@ -23,6 +23,10 @@ const UserSchema = new Schema(
       type: String,
       required: true
     },
+    repeatPassword: {
+      type: String,
+      required: true
+    },
     userType: {
       type: String,
       default: "user",
@@ -47,6 +51,7 @@ UserSchema.pre("save", function (next) {
   bcrypt.hash(user.password, 8, (err, hash) => {
     if (err) return next(err)
     user.password = hash
+    user.repeatPassword = hash
     next()
   })
 })
@@ -71,6 +76,7 @@ UserSchema.set("toJSON", {
     delete returnedObject._id
     delete returnedObject.__v
     delete returnedObject.password
+    delete returnedObject.repeatPassword
   }
 })
 
