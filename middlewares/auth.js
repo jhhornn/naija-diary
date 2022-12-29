@@ -37,12 +37,13 @@ module.exports = (passport) => {
       },
       async (req, email, password, done) => {
         try {
-          const { firstName, lastName } = req.body
+          const { firstName, lastName, repeatPassword } = req.body
           const userObject = {
             firstName,
             lastName,
             email,
-            password
+            password,
+            repeatPassword
           }
 
           const user = new UserModel(userObject)
