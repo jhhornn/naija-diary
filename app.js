@@ -4,6 +4,7 @@ const cors = require("cors")
 const morgan = require("morgan")
 const { urlencoded } = require("body-parser")
 require("express-async-errors")
+const rateLimit = require("express-rate-limit")
 const { errorLogger, errorResponder } = require("./middlewares/errHandler")
 
 const usersRoute = require("./routes/users")
@@ -15,6 +16,14 @@ const swaggerDocument = YAML.load("./naija-diary.yaml")
 
 const app = express()
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true, // return rate limit info in the RateLimit headers
+  legacyHeaders: false, // disable the X-RateLimit header
+})
+
+
 app.use(express.json())
 app.use(cors())
 app.use(urlencoded({ extended: false }))
@@ -24,6 +33,8 @@ app.use(passport.initialize())
 require("./middlewares/auth")(passport)
 
 app.use("/api", usersRoute)
+
+app.use(limiter)
 app.use("/api", blogRoute)
 
 app.get("/", (req, res, next) => {
