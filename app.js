@@ -5,6 +5,7 @@ const morgan = require("morgan")
 const { urlencoded } = require("body-parser")
 require("express-async-errors")
 const rateLimit = require("express-rate-limit")
+const helmet = require("helmet")
 const { errorLogger, errorResponder } = require("./middlewares/errHandler")
 
 const usersRoute = require("./routes/users")
@@ -20,10 +21,10 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   standardHeaders: true, // return rate limit info in the RateLimit headers
-  legacyHeaders: false, // disable the X-RateLimit header
+  legacyHeaders: false // disable the X-RateLimit header
 })
 
-
+app.use(helmet())
 app.use(express.json())
 app.use(cors())
 app.use(urlencoded({ extended: false }))
