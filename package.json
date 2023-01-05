@@ -30,6 +30,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "swagger-ui-express": "^4.6.0",
+    "winston": "^3.8.2",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
