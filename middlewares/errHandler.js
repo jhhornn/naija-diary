@@ -1,5 +1,8 @@
+const logger = require("../logger/logger")
+
 const errorLogger = (err, req, res, next) => {
-  console.error("\x1b[31m", err)
+  // console.error("\x1b[31m", err)
+  logger.error(err.message)
   next(err)
 }
 
