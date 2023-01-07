@@ -3,7 +3,6 @@ const BlogModel = require("../models/blog")
 const {
   BadRequestError,
   NotFoundError,
-  UnathenticatedError,
   UnauthorisedError
 } = require("../errors")
 
