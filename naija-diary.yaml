@@ -4,7 +4,7 @@ info:
   contact: {}
   version: '1.0'
 servers:
-- url: https://naija-diary.cyclic.app/api
+- url: https://naija-diary.cyclic.app/api/v1
   variables: {}
 - url: http://localhost:4040
   variables: {}
@@ -46,9 +46,7 @@ paths:
           headers: {}
       deprecated: false
       security: []
-      servers:
-      - url: http://example.com/api
-        variables: {}
+     
   /home/blog/{id}:
     parameters:
       - in: path

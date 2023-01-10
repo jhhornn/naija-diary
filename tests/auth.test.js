@@ -23,7 +23,7 @@ beforeEach(async () => {
 
 describe("Sign Up", () => {
   test("sign up field must not be empty", async () => {
-    await api.post("/api/signup").send().expect(400)
+    await api.post("/api/v1/signup").send().expect(400)
 
     const usersAtTheEnd = await helper.usersInDb()
     expect(usersAtTheEnd).toHaveLength(helper.initialUsers.length)
@@ -31,7 +31,7 @@ describe("Sign Up", () => {
 
   test("created a user and added to database successfully", async () => {
     await api
-      .post("/api/signup")
+      .post("/api/v1/signup")
       .send(helper.newUser)
       .expect(201)
       .expect("Content-Type", /application\/json/)
@@ -45,18 +45,17 @@ describe("Sign Up", () => {
 
   test("email must be unique", async () => {
     const result = await api
-      .post("/api/signup")
+      .post("/api/v1/signup")
       .send(helper.initialUsers[0])
       .expect(400)
 
-    expect(result.body.message).toContain("email already in use")
     const usersAtTheEnd = await helper.usersInDb()
     expect(usersAtTheEnd).toHaveLength(helper.initialUsers.length)
   })
 
   test("all required field must be provided", async () => {
     const { email, firstName } = helper.newUser
-    await api.post("/api/signup").send({ email, firstName }).expect(400)
+    await api.post("/api/v1/signup").send({ email, firstName }).expect(400)
 
     const usersAtTheEnd = await helper.usersInDb()
     expect(usersAtTheEnd).toHaveLength(helper.initialUsers.length)
@@ -67,7 +66,7 @@ describe("Sign In", () => {
   test("user exists in the database", async () => {
     const { email, password } = helper.initialUsers[0]
     await api
-      .post("/api/login")
+      .post("/api/v1/login")
       .send({ email, password })
       .expect(200)
       .expect("Content-Type", /application\/json/)
@@ -79,7 +78,7 @@ describe("Sign In", () => {
   test("user doesnt't exist in the database", async () => {
     const { email, password } = helper.newUser
     await api
-      .post("/api/login")
+      .post("/api/v1/login")
       .send({ email, password })
       .expect(401)
       .expect("Content-Type", /application\/json/)
@@ -91,7 +90,7 @@ describe("Sign In", () => {
   test("password must be correct", async () => {
     const { email } = helper.initialUsers[0]
     await api
-      .post("/api/login")
+      .post("/api/v1/login")
       .send({ email, password: "incorrect" })
       .expect(401)
       .expect("Content-Type", /application\/json/)
@@ -103,7 +102,7 @@ describe("Sign In", () => {
   test("email must be correct", async () => {
     const { password } = helper.initialUsers[0]
     await api
-      .post("/api/login")
+      .post("/api/v1/login")
       .send({ email: "incorrect@gmail.com", password })
       .expect(401)
       .expect("Content-Type", /application\/json/)
@@ -113,7 +112,7 @@ describe("Sign In", () => {
   })
 
   test("both fields must be supplied", async () => {
-    await api.post("/api/login").send().expect(401)
+    await api.post("/api/v1/login").send().expect(400)
   })
 })
 

@@ -3,7 +3,7 @@
 
 >### Signup User
 
-- Route: `/api/signup`
+- Route: `/api/v1/signup`
 - Method: `POST`
 - **Body:**
 ```json
@@ -35,7 +35,7 @@
 
 >### Login User
 
-- Route: `/api/login`
+- Route: `/api/v1/login`
 - Method: `POST`
 - **Body:** 
 
@@ -58,7 +58,7 @@
 
 >### Create Blog
 
-- Route: `/api/blog`
+- Route: `/api/v1/blog`
 - Method: `POST`
 - Header
     - Authorization: `Bearer {token}`
@@ -97,7 +97,7 @@
 
 >### Get Blog by blog Id for both Authenticated and Unauthenticated Users
 
-- Route: `/api/home/blog/:id`
+- Route: `/api/v1/home/blog/:id`
 - Method: `GET`
 - **Response:**
 
@@ -126,16 +126,16 @@
 
 >### Get all Blogs for both Authenticated and Unauthenticated Users
 
-- Route: `/api/home/blog`
+- Route: `/api/v1/home/blog`
 - Method: `GET`
 - Query params: 
-    - page (default: 1) - `/api/home/blog?p=2`
-    - per_page (default: 20) - `/api/home/blog?p=2`
-    - title - `/api/home/blog?title=the title of the blog`
+    - page (default: 1) - `/api/v1/home/blog?p=2`
+    - per_page (default: 20) - `/api/v1/home/blog?p=2`
+    - title - `/api/v1/home/blog?title=the title of the blog`
     - state (default: published)
-    - author - `/api/home/blog?author=owner's name in blog db`
-    - tags - `/api/home/blog?tag=the blog tag`
-    - sort (sortBy : orderBy, default: asc) - `/api/home/blog?sortBy=field in blog db&orderBy=asc or desc`
+    - author - `/api/v1/home/blog?author=owner's name in blog db`
+    - tags - `/api/v1/home/blog?tag=the blog tag`
+    - sort - `/api/v1/blog?sort=-any field name` the - in front signifies descending order while ascending is without the -
 
 - **Response:**
 
@@ -174,7 +174,7 @@
 
 >### Get Blog by Id for Authenticated  Users
 
-- Route: `/api/blog/:id`
+- Route: `/api/v1/blog/:id`
 - Method: `GET`
 - Header
     - Authorization: `Bearer {token}`
@@ -205,17 +205,17 @@
 
 >### Get all Blogs for Authenticated Users
 
-- Route: `/api/home/blog`
+- Route: `/api/v1/home/blog`
 - Method: `GET`
 - Header
     - Authorization: `Bearer {token}`
 - Query params: 
-    - page (default: 1) - `/api/blog?p=2`
+    - page (default: 1) - `/api/v1/blog?p=2`
     - per_page (default: 20) - `/api/blog?p=2`
-    - title - `/api/blog?title=the title of the blog`
-    - state - `/api/blog?title=the title of the blog`
-    - tags - `/api/blog?tag=the blog tag`
-    - sort (sortBy : orderBy, default: asc) - `/api/blog?sortBy=field in blog db&orderBy=asc or desc`
+    - title - `/api/v1/blog?title=the title of the blog`
+    - state - `/api/v1/blog?title=the title of the blog`
+    - tags - `/api/v1/blog?tag=the blog tag`
+    - sort - `/api/v1/blog?sort=-any field name` the - in front signifies descending order while ascending is without the -
 
 - **Response:**
 
@@ -248,7 +248,7 @@
 ```
 >### Update blog by Authenticated and Authorised User
 
-- Route: `/api/blog/:id`
+- Route: `/api/v1/blog/:id`
 - Method: `PUT`
 - Header
     - Authorization: `Bearer {token}`
@@ -277,7 +277,7 @@
 
 >### Update blog state by Authenticated and Authorised User
 
-- Route: `/api/blog/:id`
+- Route: `/api/v1/blog/:id`
 - Method: `PATCH`
 - Header
     - Authorization: `Bearer {token}`
@@ -294,7 +294,7 @@
 ```
 >### Delete blog by Authenticated and Authorised User
 
-- Route: `/api/blog/:id`
+- Route: `/api/v1/blog/:id`
 - Method: `DELETE`
 - Header
     - Authorization: `Bearer {token}`

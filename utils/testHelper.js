@@ -7,13 +7,15 @@ const initialUsers = [
     email: "seun@gmail.com",
     firstName: "John",
     lastName: "Doe",
-    password: "Password"
+    password: "Password",
+    repeatPassword: "Password"
   },
   {
     email: "tobi@gmail.com",
     firstName: "Tobi",
     lastName: "Doe",
-    password: "Password2"
+    password: "Password2",
+    repeatPassword: "Password2"
   }
 ]
 
@@ -22,7 +24,8 @@ const nonExistingId = async () => {
     email: "tempUser@gmail.com",
     firstName: "Tobi",
     lastName: "Doe",
-    password: "temppword"
+    password: "temppword",
+    repeatPassword: "temppword"
   })
   await user.save()
   await user.remove()
@@ -35,7 +38,8 @@ const existingUser = async () => {
     email: "tempUser@gmail.com",
     firstName: "Tobi",
     lastName: "Doe",
-    password: "temppword"
+    password: "temppword",
+    repeatPassword: "temppword"
   })
   await user.save()
 }
@@ -49,7 +53,8 @@ const newUser = {
   email: "jhhornn@gmail.com",
   firstName: "John",
   lastName: "Doe",
-  password: "Password"
+  password: "Password",
+  repeatPassword: "Password"
 }
 
 //! Instantiating users test parameters for blogs
@@ -58,23 +63,23 @@ const initialBlogs = [
     _id: "635f9d229a39346186b332cf",
     title: "The gods must be crazy",
     description: "The gods must be crazy",
-    tags: "movies",
+    tags: ["movies"],
     body: "The gods must be crazy talks about a tribe that has not been open to civilisation",
-    state: "published"
-    // author: "635f9d229a39346186b332cf"
+    state: "published",
+    author: "635f9d229a39346186b332cf"
   },
   {
     title: "The gods are  dead",
     description: "The gods are dead",
     owner: "John Doe",
-    tags: "horror",
+    tags: ["horror"],
     body: "The gods are dead talks about a th belief of a certain community"
   },
   {
     title: "What a title",
     description: "The gods are dead",
     owner: "John Dyke",
-    tags: "horror",
+    tags: ["horror"],
     body: "The gods are dead talks about a th belief of a certain community",
     state: "published"
   }
@@ -88,7 +93,7 @@ const blogsInDb = async () => {
 const newBlog = {
   title: "A new blog",
   description: "The gods are dead",
-  tags: "#movies",
+  tags: ["#movies"],
   body: "The gods are dead talks about a th belief of a certain community"
 }
 
