@@ -34,10 +34,10 @@ app.use(urlencoded({ extended: false }))
 app.use(passport.initialize())
 require("./middlewares/auth")(passport)
 
-app.use("/api", usersRoute)
+app.use("/api/v1", usersRoute)
 
 app.use(limiter)
-app.use("/api", blogRoute)
+app.use("/api/v1", blogRoute)
 
 app.get("/", (req, res, next) => {
   logger.info("The homepage was requested")
