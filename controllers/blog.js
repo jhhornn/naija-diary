@@ -3,7 +3,7 @@ const BlogModel = require("../models/blog")
 const {
   BadRequestError,
   NotFoundError,
-  UnathenticatedError
+  UnauthorisedError
 } = require("../errors")
 
 const createBlog = async (req, res, next) => {
@@ -78,7 +78,7 @@ const getBlogByIdAuth = async (req, res, next) => {
     const blogToGet = await BlogModel.findById(id)
     const blogId = blogToGet.author.valueOf()
     if (blogToGet.state === "draft" && userId !== blogId) {
-      throw new UnathenticatedError("can't access other's draft")
+      throw new UnauthorisedError("can't access other's draft")
     }
     if (userId !== blogId) {
       const blog = await BlogModel.findOneAndUpdate(
@@ -138,7 +138,7 @@ const updateBlog = async (req, res, next) => {
     const { title, description, body, tags } = req.body
 
     if (authorId !== blogId) {
-      throw new UnathenticatedError("Unauthorised access")
+      throw new UnauthorisedError("Unauthorised access")
     }
 
     if (title === "" || description === "" || body === "") {
@@ -177,7 +177,7 @@ const updateBlogState = async (req, res, next) => {
     const blogId = blog.author.valueOf()
 
     if (authorId !== blogId) {
-      throw new UnathenticatedError("Unauthorised access")
+      throw new UnauthorisedError("Unauthorised access")
     }
 
     const blogToUpdate = await BlogModel.findByIdAndUpdate(
@@ -204,7 +204,7 @@ const deleteBlog = async (req, res, next) => {
     const blogId = blog.author.valueOf()
 
     if (authorId !== blogId) {
-      throw new UnathenticatedError("Unauthorised access")
+      throw new UnauthorisedError("Unauthorised access")
     }
 
     const blogToDelete = await BlogModel.findByIdAndDelete({ _id: id })
