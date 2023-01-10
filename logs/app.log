@@ -1,0 +1,3 @@
+{"level":"info","message":"Server running on port 4040"}
+{"level":"http","message":"::1 GET /api/home/blog 200 821 - 303.080 ms"}
+{"level":"http","message":"::1 GET /api/blog/63a4ab02d6b2bf394623b495 401 - - 11.604 ms"}
